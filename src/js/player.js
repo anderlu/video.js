@@ -1078,6 +1078,7 @@ class Player extends Component {
       } catch (e) {
         log('deleting tag.poster throws in some browsers', e);
       }
+      this.play();
     }
   }
 
@@ -2265,7 +2266,7 @@ class Player extends Component {
   src(source) {
     // getter usage
     if (typeof source === 'undefined') {
-      return this.cache_.src;
+      return this.cache_.src || this.techGet_('src');
     }
     // filter out invalid sources and turn our source into
     // an array of source objects
