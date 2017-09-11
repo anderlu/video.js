@@ -47,7 +47,7 @@
   }
 }
 
-.video-js .vjs-volume-panel {
+.video-js .vjs-volume-panel.enable-volume-control {
   &:hover  .vjs-volume-control,
   &:active .vjs-volume-control,
   &:focus  .vjs-volume-control,
