@@ -140,7 +140,27 @@ const minifiedNovttUmd = Object.assign({}, _.cloneDeep(minifiedUmd), {
 
 minifiedNovttUmd.options.plugins.unshift(ignore(['videojs-vtt.js']));
 
-function runRollup({options, useStrict, format, dest, banner}) {
+const umdTcPlayer = {
+  options: {
+    entry: 'src/js/tcplayer.js',
+    plugins: [
+      primedResolve,
+      json(),
+      primedCjs,
+      primedBabel,
+      args.progress ? progress() : {},
+      filesize()
+    ],
+    legacy: true
+  },
+  banner: compiledLicense(Object.assign({includesVtt: true}, bannerData)),
+  useStrict: false,
+  format: 'umd',
+  moduleName: 'TcPlayer',
+  dest: 'dist/tcplayer.js'
+};
+
+function runRollup({options, useStrict, format, dest, banner, moduleName}) {
   rollup(options)
   .then(function(bundle) {
     bundle.write({
@@ -148,7 +168,7 @@ function runRollup({options, useStrict, format, dest, banner}) {
       format,
       dest,
       banner,
-      moduleName: 'videojs',
+      moduleName: moduleName || 'videojs',
       sourceMap: false
     });
   }, function(err) {
@@ -166,6 +186,7 @@ if (!args.watch) {
     runRollup(cjs);
     runRollup(umd);
     runRollup(novttUmd);
+    runRollup(umdTcPlayer);
   }
 } else {
   const props = ['format', 'dest', 'banner', 'useStrict'];
@@ -185,7 +206,11 @@ if (!args.watch) {
     ['novtt', watch({rollup},
                     Object.assign({moduleName: 'videojs'},
                                   novttUmd.options,
-                                  _.pick(novttUmd, props)))]
+                                  _.pick(novttUmd, props)))],
+    ['umdTcPlayer', watch({rollup},
+                  Object.assign({moduleName: 'tcplayer'},
+                    umdTcPlayer.options,
+                    _.pick(umdTcPlayer, props)))]
   ];
 
   watchers.forEach(function([type, watcher]) {
