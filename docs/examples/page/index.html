@@ -8,12 +8,13 @@
   <link href="../../../dist/video-js.css" rel="stylesheet">
   <script src="../../../dist/ie8/videojs-ie8.js"></script>
   <script src="../../../dist/video.js"></script>
+  <script src="../../../dist/lang/zh-CN.js"></script>
 
 </head>
 <body>
 <video id="player1" class="video-js vjs-default-skin" controls preload="auto" autoplay  height="320" playsinline webkit-playinline
-       src="//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4"
        poster="//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg">
+  <source src="//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4" type="video/mp4">
 </video>
 <script>
 //  (function () {
@@ -23,6 +24,7 @@
 //        'bigPlayButton',
 //        'controlBar'
 //      ],
+      language: 'zh-CN',
       'playbackRates': [0.5, 1, 1.5, 2],
       controlBar: {
         volumePanel: true,

@@ -157,7 +157,7 @@ const umdTcPlayer = {
   useStrict: false,
   format: 'umd',
   moduleName: 'TcPlayer',
-  dest: 'dist/tcplayer.js'
+  dest: 'dist/TcPlayer.js'
 };
 
 function runRollup({options, useStrict, format, dest, banner, moduleName}) {
@@ -208,7 +208,7 @@ if (!args.watch) {
                                   novttUmd.options,
                                   _.pick(novttUmd, props)))],
     ['umdTcPlayer', watch({rollup},
-                  Object.assign({moduleName: 'tcplayer'},
+                  Object.assign({moduleName: 'TcPlayer'},
                     umdTcPlayer.options,
                     _.pick(umdTcPlayer, props)))]
   ];
