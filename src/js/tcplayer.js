@@ -4,14 +4,16 @@
  * Time: 下午11:20
  */
 import videojs from './video.js';
+import resourceLoader from './utils/resource-loader.js';
 
 function TcPlayer(id, options, ready) {
-  // wrap
+  // TODO
+  resourceLoader();
   const player = videojs(id, options, ready);
 
   return player;
 }
-
-Object.assign(TcPlayer, videojs);
+TcPlayer.videojs = videojs;
+// Object.assign(TcPlayer, videojs);
 
 export default TcPlayer;
