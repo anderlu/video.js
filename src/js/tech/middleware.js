@@ -1,5 +1,5 @@
 import { assign } from '../utils/obj.js';
-import resourceLoader from '../utils/resource-loader.js';
+// import resourceLoader from '../utils/resource-loader.js';
 
 const middlewares = {};
 

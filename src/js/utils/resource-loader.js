@@ -12,10 +12,10 @@
  * @global {Object} document - DOM
  */
 
-let devnull = function() {},
-    bundleIdCache = {},
-    bundleResultCache = {},
-    bundleCallbackQueue = {};
+const devnull = function() {};
+let bundleIdCache = {};
+let bundleResultCache = {};
+let bundleCallbackQueue = {};
 
 /**
  * Subscribe to bundle load event.

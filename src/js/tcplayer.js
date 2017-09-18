@@ -4,7 +4,6 @@
  * Time: 下午11:20
  */
 import videojs from './video.js';
-import resourceLoader from './utils/resource-loader.js';
 import window from 'global/window';
 
 function TcPlayer(id, options, ready) {
