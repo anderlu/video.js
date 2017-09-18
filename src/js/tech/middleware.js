@@ -1,4 +1,5 @@
 import { assign } from '../utils/obj.js';
+import resourceLoader from '../utils/resource-loader.js';
 
 const middlewares = {};
 
@@ -16,7 +17,13 @@ export function getMiddleware(type) {
 }
 
 export function setSource(player, src, next) {
-  player.setTimeout(() => setSourceHelper(src, middlewares[src.type], next, player), 1);
+  // 可以在这里异步加载tech，不影响ready回调和事件触发，但是ready触发时有可能异步加载未完成
+  // resourceLoader('//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js', {
+  //   success: function () {
+  //     console.log('load hls done');
+  player.setTimeout(() => setSourceHelper(src, middlewares[src.type], next, player), 5000);
+  //   }
+  // });
 }
 
 export function setTech(middleware, tech) {
@@ -55,7 +62,7 @@ function middlewareIterator(method) {
 
 function setSourceHelper(src = {}, middleware = [], next, player, acc = [], lastRun = false) {
   const [mwFactory, ...mwrest] = middleware;
-
+  console.log('setSourceHelper');
   // if mwFactory is a string, then we're at a fork in the road
   if (typeof mwFactory === 'string') {
     setSourceHelper(src, middlewares[mwFactory], next, player, acc, lastRun);

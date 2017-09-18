@@ -15,13 +15,20 @@
 
 <video id="player1" class="video-js vjs-default-skin" controls preload="auto" height="320" playsinline webkit-playinline
        poster="//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg">
-  <source src="//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8" type="application/x-mpegURL">
-  <source src="//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4" type="video/mp4">
+  <!--<source src="//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8" type="application/x-mpegURL">-->
+  <!--<source src="//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4" type="video/mp4">-->
 </video>
 
 <script>
 //  (function () {
     var player = TcPlayer('player1',{
+      sources: [{
+        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
+        type: 'application/x-mpegURL'
+      }, {
+        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
+        type: 'video/mp4'
+      }],
       //config children play failed
 //      children: [o
 //        'bigPlayButton',
@@ -34,8 +41,15 @@
         featuresPlaybackRate: true
       }
     });
+    player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
 
     player.ready(function() {
+      console.log('player cb ready');
+//      player.play();
+    });
+
+    player.on('ready', function() {
+      console.log('player on ready');
     });
 
 //  })();

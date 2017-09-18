@@ -5,10 +5,16 @@
  */
 import videojs from './video.js';
 import resourceLoader from './utils/resource-loader.js';
+import window from 'global/window';
 
 function TcPlayer(id, options, ready) {
   // TODO
-  resourceLoader();
+  window.videojs = videojs;
+  // resourceLoader('//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js', {
+  //   success: function () {
+  //     console.log('load hls done');
+  //   }
+  // });
   const player = videojs(id, options, ready);
 
   return player;
