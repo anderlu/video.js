@@ -287,8 +287,11 @@ const EventedMixin = {
 
     // Targeting this evented object.
     if (!targetOrType || isValidEventType(targetOrType)) {
-      Events.off(this.eventBusEl_, targetOrType, typeOrListener);
-
+      if(isValidEventType(typeOrListener)) {
+        Events.off(this.eventBusEl_, typeOrListener, listener);
+      }else{
+        Events.off(this.eventBusEl_, targetOrType, typeOrListener);
+      }
     // Targeting another evented object.
     } else {
       const target = targetOrType;

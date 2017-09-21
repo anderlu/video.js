@@ -8,25 +8,16 @@
   <link href="../../../dist/video-js.css" rel="stylesheet">
   <script src="../../../dist/ie8/videojs-ie8.js"></script>
   <script src="../../../dist/video.js"></script>
-  <!--<script src="//unpkg.com/videojs-flash/dist/videojs-flash.js"></script>-->
-  <!--<script src="//unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>-->
-  <!--<script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>-->
-
 </head>
 <body>
-<video id="player1" class="video-js vjs-default-skin" controls preload="auto" height="320" playsinline webkit-playinline
-       poster="//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg">
-  <!--<source src="//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8" type="application/x-mpegURL">-->
+<video id="player1" class="video-js vjs-default-skin" controls preload="auto" height="320" playsinline webkit-playinline>
 </video>
 <script>
     var player = videojs('player1',{
       sources: [{
-        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
+        src: '//www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8',
         type: 'application/x-mpegURL'
-      }/*, {
-        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
-        type: 'video/mp4'
-      }*/],
+      }],
       playbackRates: [0.5, 1, 1.5, 2]
 //      techOrder: ['flash', 'html5']
     });
@@ -40,6 +31,12 @@
     player.on('error', function() {
       console.log('player on error');
     });
+
+    setTimeout(function(){
+//      player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
+//      player.src('//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4');
+    },1000);
+
 </script>
 </body>
 </html>

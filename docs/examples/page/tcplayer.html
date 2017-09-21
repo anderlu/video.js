@@ -21,14 +21,23 @@
 
 <script>
 //  (function () {
+
+var beforeSetup = function(videoEl, options) {
+  console.log(videoEl, options);
+  return options;
+};
+
+// add the hook
+//TcPlayer.hook('beforesetup', beforeSetup);
+
     var player = TcPlayer('player1',{
-      sources: [{
-        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
-        type: 'application/x-mpegURL'
-      }, {
-        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
-        type: 'video/mp4'
-      }],
+//      sources: [{
+//        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
+//        type: 'application/x-mpegURL'
+//      }, {
+//        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
+//        type: 'video/mp4'
+//      }],
       //config children play failed
 //      children: [o
 //        'bigPlayButton',
@@ -41,7 +50,7 @@
         featuresPlaybackRate: true
       }
     });
-    player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
+//    player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
 
     player.ready(function() {
       console.log('player cb ready');
@@ -52,6 +61,10 @@
       console.log('player on ready');
     });
 
+    setTimeout(function(){
+      player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
+//      player.src('//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4');
+    },1000);
 //  })();
 </script>
 </body>

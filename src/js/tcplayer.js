@@ -18,7 +18,14 @@ function TcPlayer(id, options, ready) {
 
   return player;
 }
-TcPlayer.videojs = videojs;
-// Object.assign(TcPlayer, videojs);
+// TcPlayer.videojs = videojs;
+Object.assign(TcPlayer, videojs);
+
+// class TcPlayer extends videojs{
+//   constructor(id, options, ready) {
+//     let player = super(id, options, ready);
+//     // return player;
+//   }
+// }
 
 export default TcPlayer;

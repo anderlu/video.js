@@ -1041,11 +1041,13 @@ class Player extends Component {
   removeTechControlsListeners_() {
     // We don't want to just use `this.off()` because there might be other needed
     // listeners added by techs that extend this.
-    this.off(this.tech_, 'tap', this.handleTechTap_);
-    this.off(this.tech_, 'touchstart', this.handleTechTouchStart_);
-    this.off(this.tech_, 'touchmove', this.handleTechTouchMove_);
-    this.off(this.tech_, 'touchend', this.handleTechTouchEnd_);
-    this.off(this.tech_, 'mousedown', this.handleTechClick_);
+    if(this.tech_){
+      this.off(this.tech_, 'tap', this.handleTechTap_);
+      this.off(this.tech_, 'touchstart', this.handleTechTouchStart_);
+      this.off(this.tech_, 'touchmove', this.handleTechTouchMove_);
+      this.off(this.tech_, 'touchend', this.handleTechTouchEnd_);
+      this.off(this.tech_, 'mousedown', this.handleTechClick_);
+    }
   }
 
   /**
