@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
-  <title>VideoJS Demo</title>
+  <title>TcPlayer Demo</title>
   <link href="../../../dist/video-js.css" rel="stylesheet">
   <!--<script src="../../../dist/ie8/videojs-ie8.js"></script>-->
   <script src="../../../dist/tcplayer.js"></script>
-  <!--<script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>-->
+  <script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>
 
 </head>
 <body>
@@ -23,21 +23,21 @@
 //  (function () {
 
 var beforeSetup = function(videoEl, options) {
-  console.log(videoEl, options);
+  console.log('beforesetup', videoEl, options);
   return options;
 };
 
 // add the hook
-//TcPlayer.hook('beforesetup', beforeSetup);
+TcPlayer.hook('beforesetup', beforeSetup);
 
     var player = TcPlayer('player1',{
-//      sources: [{
-//        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
-//        type: 'application/x-mpegURL'
-//      }, {
-//        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
-//        type: 'video/mp4'
-//      }],
+      sources: [{
+        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
+        type: 'application/x-mpegURL'
+      }, {
+        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
+        type: 'video/mp4'
+      }],
       //config children play failed
 //      children: [o
 //        'bigPlayButton',
@@ -61,10 +61,10 @@ var beforeSetup = function(videoEl, options) {
       console.log('player on ready');
     });
 
-    setTimeout(function(){
-      player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
-//      player.src('//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4');
-    },1000);
+//    setTimeout(function(){
+//      player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
+////      player.src('//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4');
+//    },1000);
 //  })();
 </script>
 </body>
