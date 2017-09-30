@@ -17,7 +17,7 @@ export function getMiddleware(type) {
 }
 
 export function setSource(player, src, next) {
-  // 可以在这里异步加载tech，不影响ready回调和事件触发，但是ready触发时有可能异步加载未完成
+  // 可以在这里异步加载tech，player ready回调是在loadtech 触发的，所以异步加载tech后ready也会异步化
   // resourceLoader('//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js', {
   //   success: function () {
   //     console.log('load hls done');
