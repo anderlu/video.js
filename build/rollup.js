@@ -142,7 +142,7 @@ minifiedNovttUmd.options.plugins.unshift(ignore(['videojs-vtt.js']));
 
 const umdTcPlayer = {
   options: {
-    entry: 'src/js/tcplayer.js',
+    entry: 'src/js/tcplayer/tcplayer.js',
     plugins: [
       primedResolve,
       json(),
