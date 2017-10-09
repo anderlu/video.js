@@ -24,7 +24,7 @@
 
 var beforeSetup = function(videoEl, options) {
   console.log('beforesetup', videoEl, options);
-  TcPlayer.getComponent('Player').prototype.options_.children.splice(0,1);
+//  TcPlayer.getComponent('Player').prototype.options_.children.splice(0,1);//改变初始化组件
   return options;
 };
 

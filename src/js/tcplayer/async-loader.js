@@ -4,11 +4,11 @@
 import Component from '../component.js';
 import mergeOptions from '../utils/merge-options.js';
 import { isCrossOrigin } from '../utils/url.js';
-import resourceLoader from '../utils/resource-loader.js';
+import resourceLoader from './utils/resource-loader.js';
 import XHR from 'xhr';
 
 /**
- * MediaAsyncLoader 会检测当前播放环境，分析传入的视频格式，异步加载需要的播放组件例如 hls.js、flv.js 等
+ * MediaAsyncLoader 会检测当前播放环境，分析传入的视频格式，异步加载需要的播放组件例如 hls.js、flv.js 等，用于替代loader.js的逻辑
  * when a player is initialized.
  *
  * @extends Component
@@ -48,6 +48,13 @@ class MediaAsyncLoader extends Component {
     // }else{
     //
     // }
+
+    // resourceLoader('//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js', {
+    //   success: function () {
+    //     console.log('load hls done');
+    //   }
+    // });
+
   }
 }
 
