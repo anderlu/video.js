@@ -5,6 +5,8 @@
  */
 import videojs from '../video.js';
 import window from 'global/window';
+
+import './plugins/dvr.js';
 import resourceLoader from './utils/resource-loader'
 
 window.videojs = videojs;
