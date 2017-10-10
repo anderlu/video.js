@@ -92,16 +92,13 @@ videojs.registerComponent('DvrMouseTimeDisplay', videojs.extend(MouseTimeDisplay
   update: function(time, pos, tp_pos){
     this.el().style.left = pos + 'px';
     this.tooltip.innerHTML = this.player_.dvr.format_time(time);
-    if (this.keepTooltipsInside)
-    {
+    if (this.keepTooltipsInside) {
       var diff = pos-this.clampPosition_(pos)+1;
       var width =
         parseFloat(window.getComputedStyle(this.tooltip).width);
       this.tooltip.style.left = 'auto';
       this.tooltip.style.right = '-' +(width/2-diff)+'px';
-    }
-    else
-    {
+    } else {
       this.tooltip.style.right = 'auto';
       this.tooltip.style.left = tp_pos + 'px';
     }
@@ -191,7 +188,7 @@ videojs.registerComponent('DvrLoadProgressBar', videojs.extend(LoadProgressBar, 
 
 const Button = videojs.getComponent('Button');
 class LiveButton extends Button{
-  createEl (){
+  createEl () {
     var el = Button.prototype.createEl.call(this, 'button', {
       className: 'vjs-live-control vjs-control',
     });
@@ -204,7 +201,7 @@ class LiveButton extends Button{
     el.appendChild(this.contentEl_);
     return el;
   }
-  handleClick (){
+  handleClick () {
     this.player_.dvr.seek_to_live();
     this.player_.play();
   }
