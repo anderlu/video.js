@@ -287,9 +287,9 @@ const EventedMixin = {
 
     // Targeting this evented object.
     if (!targetOrType || isValidEventType(targetOrType)) {
-      if(isValidEventType(typeOrListener)) {
+      if (isValidEventType(typeOrListener)) {
         Events.off(this.eventBusEl_, typeOrListener, listener);
-      }else{
+      } else {
         Events.off(this.eventBusEl_, targetOrType, typeOrListener);
       }
     // Targeting another evented object.

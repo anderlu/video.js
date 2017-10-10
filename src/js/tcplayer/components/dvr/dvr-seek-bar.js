@@ -3,11 +3,14 @@
  * Date: 2017/10/9
  * Time: 16:49
  */
-import videojs from '../video.js';
+import videojs from '../../../video.js';
+import _ from 'lodash';
+// import throttle from 'lodash/throttle';
+// import get from 'lodash/get';
 
 var SeekBar = videojs.getComponent('SeekBar');
 
-vjs.registerComponent('DvrSeekBar', videojs.extend(SeekBar, {
+videojs.registerComponent('DvrSeekBar', videojs.extend(SeekBar, {
   options_: {
     children: ['dvrLoadProgressBar', 'dvrMouseTimeDisplay', 'dvrPlayProgressBar'],
     barName: 'dvrPlayProgressBar'
@@ -15,20 +18,19 @@ vjs.registerComponent('DvrSeekBar', videojs.extend(SeekBar, {
   getPercent: function(){
     var dvr = this.player_.dvr;
     var range = dvr.range();
-    return (!range || dvr.is_live()) ? 1 :
-      (this.player_.currentTime()-range.start) /
-      (range.end-range.start);
+    return (!range || dvr.is_live()) ? 1 : (this.player_.currentTime()-range.start) / (range.end-range.start);
   },
   handleMouseMove: function(event){
     var range = this.player_.dvr.range();
-    if (!range)
+    if (!range){
       return;
-    var time = range.start + this.calculateDistance(event) *
-      (range.end-range.start);
-    if (range.end-time < this.player_.dvr.live_threshold)
+    }
+    var time = range.start + this.calculateDistance(event) * (range.end-range.start);
+    if (range.end-time < this.player_.dvr.live_threshold) {
       this.player_.dvr.seek_to_live();
-    else
+    } else {
       this.player_.currentTime(Math.min(time, range.end));
+    }
   },
   updateAriaAttributes: function(el){
     el.setAttribute('aria-valuenow', (this.getPercent() * 100).toFixed(2));
@@ -36,8 +38,8 @@ vjs.registerComponent('DvrSeekBar', videojs.extend(SeekBar, {
   },
 }));
 
-var PlayProgressBar = vjs.getComponent('PlayProgressBar');
-vjs.registerComponent('DvrPlayProgressBar', vjs.extend(PlayProgressBar, {
+var PlayProgressBar = videojs.getComponent('PlayProgressBar');
+videojs.registerComponent('DvrPlayProgressBar', videojs.extend(PlayProgressBar, {
   updateDataAttr: function(){
     this.el_.setAttribute('data-current-time',
       this.player_.dvr.format_time());
@@ -46,35 +48,32 @@ vjs.registerComponent('DvrPlayProgressBar', vjs.extend(PlayProgressBar, {
 
 function el_pos(el){
   var box;
-  if (el.getBoundingClientRect && el.parentNode)
+  if (el.getBoundingClientRect && el.parentNode) {
     box = el.getBoundingClientRect();
-  else
+  } else {
     return 0;
+  }
   var body = document.body;
   var client = document.documentElement.clientLeft || body.clientLeft || 0;
   var scroll = window.pageXOffset || body.scrollLeft;
   return Math.round(box.left + scroll - client);
 }
 
-var MouseTimeDisplay = vjs.getComponent('MouseTimeDisplay');
-var Component = vjs.getComponent('Component');
-vjs.registerComponent('DvrMouseTimeDisplay', vjs.extend(MouseTimeDisplay, {
+var MouseTimeDisplay = videojs.getComponent('MouseTimeDisplay');
+var Component = videojs.getComponent('Component');
+videojs.registerComponent('DvrMouseTimeDisplay', videojs.extend(MouseTimeDisplay, {
   constructor: function(player, options){
     Component.call(this, player, options);
-    this.keepTooltipsInside = get(options,
-      'playerOptions.controlBar.progressControl.keepTooltipsInside');
-    if (this.keepTooltipsInside)
-    {
-      this.tooltip = vjs.createEl('div',
-        {className: 'vjs-time-tooltip'});
+    this.keepTooltipsInside = _.get(options, 'playerOptions.controlBar.progressControl.keepTooltipsInside');
+    if (this.keepTooltipsInside) {
+      this.tooltip = videojs.dom.createEl('div', {className: 'vjs-time-tooltip'});
       this.el().appendChild(this.tooltip);
       this.addClass('vjs-keep-tooltips-inside');
     }
     this.update(0, 0, 0);
     var progressEl = this.player_.controlBar.progressControl.el();
     progressEl.appendChild(this.tooltip);
-    this.on(progressEl, 'mousemove',
-      throttle(this.handleMouseMove.bind(this)), 25);
+    this.on(progressEl, 'mousemove', _.throttle(this.handleMouseMove.bind(this)), 25);
   },
   handleMouseMove: function(event){
     var range = this.player_.dvr.range();
@@ -109,8 +108,8 @@ vjs.registerComponent('DvrMouseTimeDisplay', vjs.extend(MouseTimeDisplay, {
   },
 }));
 
-var LoadProgressBar = vjs.getComponent('LoadProgressBar');
-vjs.registerComponent('DvrLoadProgressBar', vjs.extend(LoadProgressBar, {
+var LoadProgressBar = videojs.getComponent('LoadProgressBar');
+videojs.registerComponent('DvrLoadProgressBar', videojs.extend(LoadProgressBar, {
   constructor: function(player, options){
     LoadProgressBar.call(this, player, options);
     this.partEls_ = [];
@@ -157,7 +156,7 @@ vjs.registerComponent('DvrLoadProgressBar', vjs.extend(LoadProgressBar, {
     this.el_.style.width = percentify(total, end-start);
     for (i = 0; i < buff.length; i++)
     {
-      children[i] = children[i] || this.el_.appendChild(vjs.createEl());
+      children[i] = children[i] || this.el_.appendChild(videojs.dom.createEl());
       var part = children[i];
       part.style.left = percentify(buff[i].start-start, total);
       part.style.width = percentify(buff[i].end-buff[i].start, total);
@@ -168,14 +167,35 @@ vjs.registerComponent('DvrLoadProgressBar', vjs.extend(LoadProgressBar, {
   },
 }));
 
-var Button = vjs.getComponent('Button');
-vjs.registerComponent('LiveButton', vjs.extend(Button, {
-  controlText_: 'Skip back to live',
-  createEl: function(){
+// var Button = videojs.getComponent('Button');
+// videojs.registerComponent('LiveButton', videojs.extend(Button, {
+//   controlText_: 'Skip back to live',
+//   createEl: function(){
+//     var el = Button.prototype.createEl.call(this, 'button', {
+//       className: 'vjs-live-control vjs-control',
+//     });
+//     this.contentEl_ = videojs.dom.createEl('div', {
+//       className: 'vjs-live-display',
+//       innerHTML: this.localize('LIVE'),
+//     }, {
+//       'aria-live': 'off',
+//     });
+//     el.appendChild(this.contentEl_);
+//     return el;
+//   },
+//   handleClick: function(){
+//     this.player_.dvr.seek_to_live();
+//     this.player_.play();
+//   }
+// }));
+
+const Button = videojs.getComponent('Button');
+class LiveButton extends Button{
+  createEl (){
     var el = Button.prototype.createEl.call(this, 'button', {
       className: 'vjs-live-control vjs-control',
     });
-    this.contentEl_ = vjs.createEl('div', {
+    this.contentEl_ = videojs.dom.createEl('div', {
       className: 'vjs-live-display',
       innerHTML: this.localize('LIVE'),
     }, {
@@ -183,9 +203,11 @@ vjs.registerComponent('LiveButton', vjs.extend(Button, {
     });
     el.appendChild(this.contentEl_);
     return el;
-  },
-  handleClick: function(){
+  }
+  handleClick (){
     this.player_.dvr.seek_to_live();
     this.player_.play();
-  },
-}));
+  }
+}
+LiveButton.prototype.controlText_= 'Skip back to live';
+videojs.registerComponent('LiveButton',LiveButton);

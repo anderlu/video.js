@@ -9,7 +9,31 @@
   <!--<script src="../../../dist/ie8/videojs-ie8.js"></script>-->
   <script src="../../../dist/tcplayer.js"></script>
   <!--<script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>-->
+  <style>
+    .vjs-dvr .vjs-progress-control {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+    }
+    .vjs-dvr .vjs-live-control {
+      flex: inherit;
+      cursor: pointer;
+    }
+    .vjs-dvr .vjs-live-control .vjs-tooltip {
+      line-height: 1em;
+    }
+    .vjs-dvr-live .vjs-live-control .vjs-tooltip {
+      display: none;
+    }
+    .vjs-dvr-live .vjs-live-control {
+      cursor: default;
+    }
+    .vjs-dvr:not(.vjs-dvr-live) .vjs-live-display:before {
+      background: #566377;
+    }
 
+  </style>
 </head>
 <body>
 

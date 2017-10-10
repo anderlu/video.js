@@ -19,7 +19,10 @@ window.videojs = videojs;
 
 function TcPlayer(id, options, ready) {
   // TODO
-
+  options.plugins = videojs.mergeOptions(options.plugins, {
+    'Dvr':{}
+  });
+  console.log(options);
   const player = videojs(id, options, ready);
 
   return player;
