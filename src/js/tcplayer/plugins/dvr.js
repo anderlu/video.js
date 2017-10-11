@@ -1,7 +1,10 @@
 /**
- * User: anderlu
- * Date: 2017/10/9
- * Time: 16:49
+ * 直播时移回看插件，需要实现的内容
+ * 1.播放带delay参数的hls地址
+ * 2.获取进度条拖拽结果，计算出delay值，更新url参数并播放新的hls地址
+ * 3.进度条的拖拽区间
+ * 4.
+ * 5.
  */
 import videojs from '../../video.js';
 import '../components/dvr/dvr-seek-bar.js'
@@ -15,7 +18,7 @@ class Dvr extends Plugin{
 
     player.ready(function(){
       var seekable = player.seekable();
-      console.log(seekable);
+
       if (player.duration() && seekable && seekable.length){
         self.init();
       }else{
