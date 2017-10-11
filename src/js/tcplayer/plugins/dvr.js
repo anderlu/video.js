@@ -2,8 +2,8 @@
  * 直播时移回看插件，需要实现的内容
  * 1.播放带delay参数的hls地址
  * 2.获取进度条拖拽结果，计算出delay值，更新url参数并播放新的hls地址
- * 3.进度条的拖拽区间
- * 4.
+ * 3.进度条的拖拽区间，即delay的取值区间
+ * 4.与默认的进度条不同，不需要随timeupdate更新
  * 5.
  */
 import videojs from '../../video.js';
@@ -82,8 +82,8 @@ class Dvr extends Plugin{
     //   return;
     // }
     var progressControl = player.controlBar.progressControl;
-    // remove_child(progressControl, 'seekBar');
-    // progressControl.seekBar = progressControl.addChild('DvrSeekBar');
+    remove_child(progressControl, 'seekBar');
+    progressControl.seekBar = progressControl.addChild('DvrSeekBar');
     remove_child(player.controlBar, 'liveDisplay');
     player.controlBar.addChild('LiveButton');
     player.addClass('vjs-dvr');

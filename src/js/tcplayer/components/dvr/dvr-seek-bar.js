@@ -15,7 +15,7 @@ videojs.registerComponent('DvrSeekBar', videojs.extend(SeekBar, {
   options_: {
     // children: ['dvrLoadProgressBar', 'dvrMouseTimeDisplay', 'dvrPlayProgressBar'],
     children: ['dvrPlayProgressBar'],
-    barName: 'dvrPlayProgressBar'
+    barName: ''
   },
   getPercent: function(){
 
@@ -46,6 +46,21 @@ function el_pos(el){
   var scroll = window.pageXOffset || body.scrollLeft;
   return Math.round(box.left + scroll - client);
 }
+
+var MouseTimeDisplay = videojs.getComponent('MouseTimeDisplay');
+var Component = videojs.getComponent('Component');
+videojs.registerComponent('DvrMouseTimeDisplay', videojs.extend(MouseTimeDisplay, {
+  constructor: function(player, options){
+    Component.call(this, player, options);
+
+  },
+  handleMouseMove: function(event){
+
+  },
+  update: function(time, pos, tp_pos){
+
+  },
+}));
 
 var LoadProgressBar = videojs.getComponent('LoadProgressBar');
 videojs.registerComponent('DvrLoadProgressBar', videojs.extend(LoadProgressBar, {
