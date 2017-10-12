@@ -8,6 +8,7 @@
  */
 import videojs from '../../video.js';
 import '../components/dvr/dvr-seek-bar.js'
+import '../components/dvr/dvr-progress-control.js'
 
 const Plugin = videojs.getPlugin('plugin');
 
@@ -81,10 +82,12 @@ class Dvr extends Plugin{
     // if (!hls && !flashls || player.duration()!=Infinity || !seekable || !seekable.length || (seekable.end(0)-seekable.start(0))<60) {
     //   return;
     // }
-    var progressControl = player.controlBar.progressControl;
-    remove_child(progressControl, 'seekBar');
-    progressControl.seekBar = progressControl.addChild('DvrSeekBar');
-    remove_child(player.controlBar, 'liveDisplay');
+    // var progressControl = player.controlBar.progressControl;
+    // remove_child(progressControl, 'seekBar');
+    // progressControl.seekBar = progressControl.addChild('DvrSeekBar');
+    remove_child(player.controlBar, 'ProgressControl');
+    player.controlBar.addChild('DvrProgressControl', {}, 5);
+    remove_child(player.controlBar, 'LiveDisplay');
     player.controlBar.addChild('LiveButton');
     player.addClass('vjs-dvr');
     // if (!player.hasStarted()) {
