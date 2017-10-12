@@ -6,7 +6,7 @@
 import videojs from '../../../video.js';
 import _ from 'lodash';
 /**
- * 处理直播回看视频的进度条逻辑，mousemove时显示可以点击或拖拽的时间戳
+ * 处理视频时移回看的进度条逻辑，mousemove时显示可以点击或拖拽的时间戳
  * @extends Component
  */
 const Component = videojs.getComponent('Component');
@@ -32,7 +32,7 @@ class DvrProgressControl extends Component{
    * 鼠标在DvrProgressControl上方移动时，获取事件并根据鼠标的相对位置进行计算时间
    */
   handleMouseMove(event){
-
+    // console.log('DvrProgressControl move', event);
   }
 }
 DvrProgressControl.prototype.options_ = {
@@ -43,7 +43,7 @@ DvrProgressControl.prototype.options_ = {
 videojs.registerComponent('DvrProgressControl', DvrProgressControl);
 
 /**
- * 滑动条
+ * 滑动条容器
  * @extends Slider
  */
 var Slider = videojs.getComponent('Slider');
@@ -65,34 +65,62 @@ class DvrSeekBar extends Slider {
       'aria-label': this.localize('Progress Bar')
     });
   }
-  update (){
 
+  /**
+   * 需要在目标点击或者拖拽后更新滑块的位置
+   */
+  update (){
+    // const percent = super.update();
+    console.log('DvrSeekBar update');
+  }
+  /**
+   * Handle mouse move on seek bar
+   *
+   * @param {EventTarget~Event} event
+   *        The `mousemove` event that caused this to run.
+   *
+   * @listens mousemove
+   */
+  handleMouseMove(event) {
+    let newTime = this.calculateDistance(event) * this.player_.duration();
+    console.log('DvrSeekBar mouseDown or move', newTime)
   }
 }
 DvrSeekBar.prototype.options_ = {
   children:[
-    'DvrPlayProgressBar'
+    'DvrTimeShiftBar'
   ],
-  barName: 'DvrPlayProgressBar'
+  barName: 'DvrTimeShiftBar'
 };
 
 videojs.registerComponent('DvrSeekBar', DvrSeekBar);
 
 /**
- * DvrPlayProgressBar
+ * 可拖动的时移进度条
  */
-class DvrPlayProgressBar extends Component{
+class DvrTimeShiftBar extends Component{
   createEl() {
     return super.createEl('div', {
-      className: 'vjs-play-progress vjs-slider-bar tcp-dvr-play-progress',
+      className: 'vjs-play-progress vjs-slider-bar tcp-dvr-time-shift',
       innerHTML: `<span class="vjs-control-text"><span>${this.localize('Progress')}</span>: 0%</span>`
     });
   }
+  /**
+   * Enqueues updates to its own DOM as well as the DOM of its
+   * {@link TimeTooltip} child.
+   *
+   * @param {Object} seekBarRect
+   *        The `ClientRect` for the {@link SeekBar} element.
+   *
+   * @param {number} seekBarPoint
+   *        A number from 0 to 1, representing a horizontal reference point
+   *        from the left edge of the {@link SeekBar}
+   */
   update(seekBarRect, seekBarPoint) {
 
   }
 }
-videojs.registerComponent('DvrPlayProgressBar', DvrPlayProgressBar);
+videojs.registerComponent('DvrTimeShiftBar', DvrTimeShiftBar);
 
 
 
