@@ -13,7 +13,7 @@ const Component = videojs.getComponent('Component');
 class DvrProgressControl extends Component{
   constructor(player, options){
     super(player, options);
-    this.handleMouseMove = _.throttle(this.handleMouseMove.bind(this), 25);
+    // this.handleMouseMove = _.throttle(this.handleMouseMove.bind(this), 25);
     this.on(this.el_, 'mousemove', this.handleMouseMove);
 
   }
@@ -72,6 +72,7 @@ class DvrSeekBar extends Slider {
   update (){
     // const percent = super.update();
     console.log('DvrSeekBar update');
+    this.bar.update(videojs.dom.getBoundingClientRect(this.el_));
   }
   /**
    * Handle mouse move on seek bar
@@ -83,7 +84,8 @@ class DvrSeekBar extends Slider {
    */
   handleMouseMove(event) {
     let newTime = this.calculateDistance(event) * this.player_.duration();
-    console.log('DvrSeekBar mouseDown or move', newTime)
+    console.log('DvrSeekBar mouseDown or move', this.calculateDistance(event))
+
   }
 }
 DvrSeekBar.prototype.options_ = {
@@ -117,7 +119,7 @@ class DvrTimeShiftBar extends Component{
    *        from the left edge of the {@link SeekBar}
    */
   update(seekBarRect, seekBarPoint) {
-
+    console.log('DvrTimeShiftBar', seekBarRect, seekBarPoint);
   }
 }
 videojs.registerComponent('DvrTimeShiftBar', DvrTimeShiftBar);
