@@ -51,6 +51,7 @@ class DvrSeekBar extends Slider {
   constructor(player, options) {
     super(player, options);
     this.update = _.throttle(this.update.bind(this), 50);
+    console.log('DvrSeekBar init vertical:', this.vertical())
   }
   /**
    * Create the `Component`'s DOM element
@@ -68,11 +69,17 @@ class DvrSeekBar extends Slider {
 
   /**
    * 需要在目标点击或者拖拽后更新滑块的位置
+   *
+   * @param {number} percent
+   *        取值区间为[0,1]
    */
-  update (){
+  update(percent) {
     // const percent = super.update();
-    console.log('DvrSeekBar update');
-    this.bar.update(videojs.dom.getBoundingClientRect(this.el_));
+    if(percent == undefined){
+      return ;
+    }
+    console.log('DvrSeekBar update', percent);
+    this.bar.update(videojs.dom.getBoundingClientRect(this.el_), percent);
   }
   /**
    * Handle mouse move on seek bar
@@ -84,7 +91,20 @@ class DvrSeekBar extends Slider {
    */
   handleMouseMove(event) {
     let newTime = this.calculateDistance(event) * this.player_.duration();
-    console.log('DvrSeekBar mouseDown or move', this.calculateDistance(event))
+    console.log('DvrSeekBar mouseDown or move', this.calculateDistance(event));
+    this.update(this.calculateDistance(event));
+  }
+  handleMouseUp(event) {
+    super.handleMouseUp();
+    console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
+    // this.update(this.calculateDistance(event));
+
+    //设置播放地址
+  }
+  stepBack() {
+
+  }
+  stepForward() {
 
   }
 }
@@ -94,17 +114,20 @@ DvrSeekBar.prototype.options_ = {
   ],
   barName: 'DvrTimeShiftBar'
 };
-
 videojs.registerComponent('DvrSeekBar', DvrSeekBar);
 
 /**
  * 可拖动的时移进度条
  */
 class DvrTimeShiftBar extends Component{
+  constructor(player, options) {
+    super(player, options);
+    this.el_.style.width = '100%';
+  }
   createEl() {
     return super.createEl('div', {
       className: 'vjs-play-progress vjs-slider-bar tcp-dvr-time-shift',
-      innerHTML: `<span class="vjs-control-text"><span>${this.localize('Progress')}</span>: 0%</span>`
+      innerHTML: `<span class="vjs-control-text"><span>${this.localize('Progress')}</span>: 100%</span>`
     });
   }
   /**
@@ -120,6 +143,10 @@ class DvrTimeShiftBar extends Component{
    */
   update(seekBarRect, seekBarPoint) {
     console.log('DvrTimeShiftBar', seekBarRect, seekBarPoint);
+
+    const percentage = (seekBarPoint * 100).toFixed(2) + '%';
+    const style = this.el_.style;
+    style.width = percentage;
   }
 }
 videojs.registerComponent('DvrTimeShiftBar', DvrTimeShiftBar);

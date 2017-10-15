@@ -41,6 +41,7 @@ class Dvr extends Plugin{
     });
 
     player.dvr = {
+      range:[0, 3600*2],
       live_threshold: 10,
       range: function(){
         var seekable = player.seekable();
