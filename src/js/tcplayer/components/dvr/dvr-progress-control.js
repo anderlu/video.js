@@ -43,13 +43,14 @@ DvrProgressControl.prototype.options_ = {
 videojs.registerComponent('DvrProgressControl', DvrProgressControl);
 
 /**
- * 滑动条容器
+ * 时移滑动条容器
  * @extends Slider
  */
 var Slider = videojs.getComponent('Slider');
 class DvrSeekBar extends Slider {
   constructor(player, options) {
     super(player, options);
+    this.percent_ = 100;
     this.update = _.throttle(this.update.bind(this), 50);
     console.log('DvrSeekBar init vertical:', this.vertical())
   }
@@ -78,8 +79,10 @@ class DvrSeekBar extends Slider {
     if(percent == undefined){
       return ;
     }
+    this.percent_ = percent;
     console.log('DvrSeekBar update', percent);
     this.bar.update(videojs.dom.getBoundingClientRect(this.el_), percent);
+    this.updateAriaAttributes(percent);
   }
   /**
    * Handle mouse move on seek bar
@@ -95,9 +98,10 @@ class DvrSeekBar extends Slider {
     this.update(this.calculateDistance(event));
   }
   handleMouseUp(event) {
+    //slider handleMouseUp 会调用 update 方法，但是没有传入参数，会影响DvrSeekBar的update逻辑
     super.handleMouseUp();
     console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
-    // this.update(this.calculateDistance(event));
+    this.update(this.calculateDistance(event));
 
     //设置播放地址
   }
@@ -106,6 +110,13 @@ class DvrSeekBar extends Slider {
   }
   stepForward() {
 
+  }
+  updateAriaAttributes(percent){
+    let el = this.el();
+    el.setAttribute('aria-valuenow', (percent * 100).toFixed(2));
+  }
+  getPercent(){
+    return this.percent_;
   }
 }
 DvrSeekBar.prototype.options_ = {
@@ -118,6 +129,7 @@ videojs.registerComponent('DvrSeekBar', DvrSeekBar);
 
 /**
  * 可拖动的时移进度条
+ * @extends Component
  */
 class DvrTimeShiftBar extends Component{
   constructor(player, options) {
@@ -151,7 +163,32 @@ class DvrTimeShiftBar extends Component{
 }
 videojs.registerComponent('DvrTimeShiftBar', DvrTimeShiftBar);
 
-
+/**
+ * 返回直播视频按钮
+ *  @extends Button
+ */
+const Button = videojs.getComponent('Button');
+class LiveButton extends Button{
+  createEl () {
+    var el = Button.prototype.createEl.call(this, 'button', {
+      className: 'vjs-live-control vjs-control',
+    });
+    this.contentEl_ = videojs.dom.createEl('div', {
+      className: 'vjs-live-display',
+      innerHTML: this.localize('LIVE'),
+    }, {
+      'aria-live': 'off',
+    });
+    el.appendChild(this.contentEl_);
+    return el;
+  }
+  handleClick (event) {
+    // this.player_.dvr.seek_to_live();
+    // this.player_.play();
+  }
+}
+LiveButton.prototype.controlText_= 'Skip back to live';
+videojs.registerComponent('LiveButton',LiveButton);
 
 
 

@@ -7,7 +7,7 @@
  * 5.
  */
 import videojs from '../../video.js';
-import '../components/dvr/dvr-seek-bar.js'
+// import '../components/dvr/dvr-seek-bar.js'
 import '../components/dvr/dvr-progress-control.js'
 
 const Plugin = videojs.getPlugin('plugin');
