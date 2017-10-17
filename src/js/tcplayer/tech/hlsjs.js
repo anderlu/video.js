@@ -15,17 +15,15 @@ class Html5HlsJS{
   constructor(source, tech, options){
     let hls = new Hls(options.hlsjsConfig);
     let video = tech.el();
-    let duration = 0;
 
     //处理异常
     hls.on(Hls.Events.ERROR, this.onError.bind(this));
     hls.on(Hls.Events.MANIFEST_PARSED, this.onMetaData.bind(this));
-    hls.on(Hls.Events.LEVEL_LOADED, function(event, data) { duration = data.details.live ? Infinity : data.details.totalduration; });
+    hls.on(Hls.Events.LEVEL_LOADED, this.onLevelLoaded.bind(this));
 
     hls.attachMedia(video);
     hls.loadSource(source.src);
     this.hls = hls;
-    this.duration = duration;
   }
   switchQuality(qualityId, trackType){
 
@@ -34,10 +32,17 @@ class Html5HlsJS{
     this.hls.destroy();
   }
   onMetaData(event, data){
-    console.log('hlsjs onMetaData');
+    console.log('hlsjs onMetaData', event, data);
+  }
+  onLevelLoaded(event, data){
+    console.log('level loaded', event, data);
+    this._duration = data.details.live ? Infinity : data.details.totalduration;
   }
   onError(event,data){
     console.log('hlsjs onError');
+  }
+  duration(){
+    return this._duration;
   }
 }
 
