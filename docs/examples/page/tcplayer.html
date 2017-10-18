@@ -57,7 +57,8 @@ TcPlayer.hook('beforesetup', beforeSetup);
 
     var player = TcPlayer('player1',{
       sources: [{
-        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
+//        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
+        src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
 //        src: '//4230.liveplay.myqcloud.com/live/4230_201708101049450061312437_1.m3u8',
         type: 'application/x-mpegURL'
       }, {
@@ -81,6 +82,12 @@ TcPlayer.hook('beforesetup', beforeSetup);
     player.ready(function() {
       console.log('player cb ready');
 //      player.play();
+      player.tech_.on('loadedqualitydata', function (event) {
+        console.log('loadedqualitydata', event);
+      });
+      player.tech_.on('hlsLevelLoaded', function (event) {
+        console.log('hlsLevelLoaded', event);
+      });
     });
 
     player.on('ready', function() {
