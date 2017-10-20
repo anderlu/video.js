@@ -8,7 +8,7 @@ import window from 'global/window';
 
 import './plugins/dvr.js';
 import './tech/hlsjs.js';
-import resourceLoader from './utils/resource-loader';
+// import resourceLoader from './utils/resource-loader';
 
 window.videojs = videojs;
 
@@ -20,10 +20,10 @@ window.videojs = videojs;
 
 function TcPlayer(id, options, ready) {
   // TODO
-  var _options = {
+  var plugins = {
     'Dvr': {}
-  }
-  options.plugins = videojs.mergeOptions(options.plugins, _options);
+  };
+  options.plugins = videojs.mergeOptions(options.plugins, plugins);
 
   const player = videojs(id, options, ready);
 

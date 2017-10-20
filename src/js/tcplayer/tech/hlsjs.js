@@ -15,9 +15,10 @@ class Html5HlsJS{
   constructor(source, tech, options){
     let hls = new Hls(options.hlsjsConfig);
     let video = tech.el();
-    console.log(arguments);
+
     this.tech = tech;
     this.hls = hls;
+    this.manifests = [];
     //处理异常
     hls.on(Hls.Events.ERROR, this.onError.bind(this));
     hls.on(Hls.Events.MANIFEST_PARSED, this.onMetaData.bind(this));
@@ -38,9 +39,14 @@ class Html5HlsJS{
   onEvent(event,data){
     // console.log('hlsjs onEvent', event, data);
     this.tech.trigger({ type: event, data: data });
+    switch (event){
+      case Hls.Events.MANIFEST_LOADED:
+        this.manifests.push(data.networkDetails.response || data.networkDetails.responseText);
+        break;
+    }
   }
   onMetaData(event, data){
-    console.log('hlsjs onMetaData', event, data);
+    // console.log('hlsjs onMetaData', event, data);
     let cleanTracklist = [];
     let _hls = this.hls;
 
@@ -66,7 +72,7 @@ class Html5HlsJS{
       qualityData: {video: cleanTracklist},
       qualitySwitchCallback: this.switchQuality
     };
-    console.log('hlsjs onMetaData', payload);
+    // console.log('hlsjs onMetaData', payload);
 
     this.tech.trigger({ type: 'loadedqualitydata', data: payload });
 
@@ -78,7 +84,7 @@ class Html5HlsJS{
     }
   }
   onLevelLoaded(event, data){
-    console.log('hlsjs level loaded', event, data);
+    // console.log('hlsjs level loaded', event, data);
     this._duration = data.details.live ? Infinity : data.details.totalduration;
   }
   onError(event,data){

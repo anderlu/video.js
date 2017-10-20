@@ -28,14 +28,6 @@ class Dvr extends Plugin{
             self.init();
             return;
           }
-          player.on('timeupdate', function on_timeupdate(){
-            var seekable = player.seekable();
-            if (!seekable || !seekable.length){
-              return;
-            }
-            player.off('timeupdate', on_timeupdate);
-            self.init();
-          });
         });
       }
     });
@@ -43,41 +35,17 @@ class Dvr extends Plugin{
     player.dvr = {
       range:[0, 3600*2],
       live_threshold: 10,
-      range: function(){
-        var seekable = player.seekable();
-        return seekable && seekable.length ?
-          {start: seekable.start(0), end: seekable.end(0)} : null;
-      },
-      is_live: function(){
-        var range = this.range();
-        var end = range && range.end;
-        return end && (end-player.currentTime()) <= this.live_threshold;
-      },
-      format_time: function(time){
-        var range = this.range();
-        if (!range) {
-          return '0:00';
-        }
-        if (!time) {
-          time = player.scrubbing() ? player.getCache().currentTime :
-            player.currentTime();
-        }
-        if (range.end-time < this.live_threshold){
-          return player.localize('Live');
-        }
-        time = Math.max(range.end-time, 0);
-        return (time > 0 ? '-' : '') + videojs.formatTime(time, range.end);
-      },
-      seek_to_live: function(){
-        var range = this.range();
-        if (range && !this.is_live())
-          player.currentTime(range.end);
+      seekToLive: function(){
+
       },
     };
   }
   init() {
-    var player = this.player;
-    // var hls = player.tech_.hls_obj;
+    let player = this.player;
+    let hlsProvider = player.tech_.hlsProvider;
+    //可以通过hls的 hlsManifestLoaded事件获取m3u8数据，然而dvr初始化时，hls已经开始加载并触发事件，所以在这里监听hls时间可能达不到预期的目的
+    this.parseM3u8(hlsProvider.manifests[0]);
+
     // var flashls = player.tech_.flashlsProvider;
     // var seekable = player.seekable();
     // if (!hls && !flashls || player.duration()!=Infinity || !seekable || !seekable.length || (seekable.end(0)-seekable.start(0))<60) {
@@ -87,10 +55,11 @@ class Dvr extends Plugin{
     // remove_child(progressControl, 'seekBar');
     // progressControl.seekBar = progressControl.addChild('DvrSeekBar');
     remove_child(player.controlBar, 'ProgressControl');
-    player.controlBar.addChild('DvrProgressControl', {}, 5);
+    let control = player.controlBar.addChild('DvrProgressControl', {}, 5);
     remove_child(player.controlBar, 'LiveDisplay');
     player.controlBar.addChild('LiveButton');
     player.addClass('vjs-dvr');
+    console.log(this);
     // if (!player.hasStarted()) {
     //   player.one('play', function () {
     //     player.dvr.seek_to_live();
@@ -108,6 +77,31 @@ class Dvr extends Plugin{
     //       Math.max(data.details.targetduration*1.5, 10);
     //   });
     // }
+  }
+  seekToLive (){
+    console.log('seekToLive', this.player);
+  }
+  parseM3u8 (string){
+    this.dvrData = {};
+    //可以通过hls的 hlsManifestLoaded事件获取m3u8数据，然而dvr初始化时，hls已经开始加载并触发事件，所以在这里监听hls时间可能达不到预期的目的
+    // console.log('dvr init', hlsProvider);
+    // const TX_TS_START_TIME=/#EXT-TX-TS-START-TIME:*(.+)/;
+    // const TX_TS_DURATION_REGEX=/#EXT-TX-TS-DURATION:*(.+)/;
+    const LEVEL_PLAYLIST_REGEX_FAST = new RegExp([
+      /#EXT-TX-TS-START-TIME:*(.+)/.source,
+      /|#EXT-TX-TS-DURATION:*(.+)/.source
+    ].join(''), 'g');
+    let result ;
+    while ((result = LEVEL_PLAYLIST_REGEX_FAST.exec(string)) !== null) {
+      console.log('dvr init', result);
+      if(result[1]){
+        //START-TIME 直播开始时间
+        this.dvrData['startTime'] = result[1];
+      }else if(result[2]){
+        //DURATION 直播持续时间，可回看时移最大值
+        this.dvrData['duration'] = result[2];
+      }
+    }
   }
 }
 

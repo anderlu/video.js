@@ -52,7 +52,7 @@ class DvrSeekBar extends Slider {
     super(player, options);
     this.percent_ = 100;
     this.update = _.throttle(this.update.bind(this), 50);
-    console.log('DvrSeekBar init vertical:', this.vertical())
+    // console.log('DvrSeekBar init vertical:', this.vertical()) // false
   }
   /**
    * Create the `Component`'s DOM element
@@ -69,8 +69,8 @@ class DvrSeekBar extends Slider {
   }
 
   /**
-   * 需要在目标点击或者拖拽后更新滑块的位置
-   *
+   * 在目标点击或者拖拽后更新滑块的位置
+   * 同时更新aria属性值
    * @param {number} percent
    *        取值区间为[0,1]
    */
@@ -80,7 +80,7 @@ class DvrSeekBar extends Slider {
       return ;
     }
     this.percent_ = percent;
-    console.log('DvrSeekBar update', percent);
+    // console.log('DvrSeekBar update', (percent*100).toFixed(2), window.getComputedStyle(this.el_).height);
     this.bar.update(videojs.dom.getBoundingClientRect(this.el_), percent);
     this.updateAriaAttributes(percent);
   }
@@ -94,16 +94,16 @@ class DvrSeekBar extends Slider {
    */
   handleMouseMove(event) {
     let newTime = this.calculateDistance(event) * this.player_.duration();
-    console.log('DvrSeekBar mouseDown or move', this.calculateDistance(event));
+    // console.log('DvrSeekBar mouseDown or move', this.calculateDistance(event));
     this.update(this.calculateDistance(event));
   }
   handleMouseUp(event) {
     //slider handleMouseUp 会调用 update 方法，但是没有传入参数，会影响DvrSeekBar的update逻辑
     super.handleMouseUp();
-    console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
+    // console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
     this.update(this.calculateDistance(event));
-
     //设置播放地址
+
   }
   stepBack() {
 
@@ -144,7 +144,6 @@ class DvrTimeShiftBar extends Component{
   }
   /**
    * Enqueues updates to its own DOM as well as the DOM of its
-   * {@link TimeTooltip} child.
    *
    * @param {Object} seekBarRect
    *        The `ClientRect` for the {@link SeekBar} element.
@@ -183,7 +182,7 @@ class LiveButton extends Button{
     return el;
   }
   handleClick (event) {
-    // this.player_.dvr.seek_to_live();
+    this.player_.Dvr().seekToLive();
     // this.player_.play();
   }
 }
