@@ -14,7 +14,8 @@ class DvrProgressControl extends Component{
   constructor(player, options){
     super(player, options);
     // this.handleMouseMove = _.throttle(this.handleMouseMove.bind(this), 25);
-    this.on(this.el_, 'mousemove', this.handleMouseMove);
+    this.on('mousemove', this.handleMouseMove);
+    this.on('mouseup', this.handleMouseUp);
 
   }
   /**
@@ -33,6 +34,17 @@ class DvrProgressControl extends Component{
    */
   handleMouseMove(event){
     // console.log('DvrProgressControl move', event);
+    const dvrSeekBar = this.getChild('DvrSeekBar');
+    let percent = dvrSeekBar.calculateDistance(event);
+    const mouseTimeDisplay = dvrSeekBar.getChild('DvrMouseTimeDisplay');
+    if(mouseTimeDisplay){
+      mouseTimeDisplay.update(videojs.dom.getBoundingClientRect(dvrSeekBar.el()), percent);
+    }
+  }
+  handleMouseUp(event){
+    console.log('DvrProgressControl mouseup');
+    const dvrSeekBar = this.getChild('DvrSeekBar');
+    // dvrSeekBar.handleMouseUp(event);
   }
 }
 DvrProgressControl.prototype.options_ = {
@@ -50,9 +62,14 @@ var Slider = videojs.getComponent('Slider');
 class DvrSeekBar extends Slider {
   constructor(player, options) {
     super(player, options);
-    this.percent_ = 100;
-    this.update = _.throttle(this.update.bind(this), 50);
+    this.percent_ = 1;
+    this.update = _.throttle(videojs.bind(this, this.update), 50);
+    // this.on('mousemove', this.handleMouseMove);
+
     // console.log('DvrSeekBar init vertical:', this.vertical()) // false
+    this.on(player, 'seekToLive',videojs.bind(this, function (event) {
+      this.update(event.data);
+    }));
   }
   /**
    * Create the `Component`'s DOM element
@@ -67,7 +84,6 @@ class DvrSeekBar extends Slider {
       'aria-label': this.localize('Progress Bar')
     });
   }
-
   /**
    * 在目标点击或者拖拽后更新滑块的位置
    * 同时更新aria属性值
@@ -84,6 +100,10 @@ class DvrSeekBar extends Slider {
     this.bar.update(videojs.dom.getBoundingClientRect(this.el_), percent);
     this.updateAriaAttributes(percent);
   }
+  handleMouseDown(event){
+    super.handleMouseDown(event);
+    this.isMouseDown = true;
+  }
   /**
    * Handle mouse move on seek bar
    *
@@ -93,17 +113,26 @@ class DvrSeekBar extends Slider {
    * @listens mousemove
    */
   handleMouseMove(event) {
-    let newTime = this.calculateDistance(event) * this.player_.duration();
+    // let newTime = this.calculateDistance(event) * this.player_.duration();
+    let percent = this.calculateDistance(event);
     // console.log('DvrSeekBar mouseDown or move', this.calculateDistance(event));
-    this.update(this.calculateDistance(event));
+    this.update(percent);
   }
   handleMouseUp(event) {
+    this.isMouseDown = false;
+    const doc = this.el_;
+
+    let percent = this.calculateDistance(event);
     //slider handleMouseUp 会调用 update 方法，但是没有传入参数，会影响DvrSeekBar的update逻辑
     super.handleMouseUp();
-    // console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
-    this.update(this.calculateDistance(event));
-    //设置播放地址
+    console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
+    this.update(percent);
+    //设置时移播放地址
+    this.player_.Dvr().timeShit(percent);
 
+    this.off(doc, 'mouseup', this.handleMouseUp);
+    this.off(doc, 'touchmove', this.handleMouseMove);
+    this.off(doc, 'touchend', this.handleMouseUp);
   }
   stepBack() {
 
@@ -121,6 +150,7 @@ class DvrSeekBar extends Slider {
 }
 DvrSeekBar.prototype.options_ = {
   children:[
+    'DvrMouseTimeDisplay',
     'DvrTimeShiftBar'
   ],
   barName: 'DvrTimeShiftBar'
@@ -153,14 +183,38 @@ class DvrTimeShiftBar extends Component{
    *        from the left edge of the {@link SeekBar}
    */
   update(seekBarRect, seekBarPoint) {
-    console.log('DvrTimeShiftBar', seekBarRect, seekBarPoint);
+    // console.log('DvrTimeShiftBar', seekBarRect, seekBarPoint);
 
     const percentage = (seekBarPoint * 100).toFixed(2) + '%';
     const style = this.el_.style;
     style.width = percentage;
   }
 }
+
 videojs.registerComponent('DvrTimeShiftBar', DvrTimeShiftBar);
+
+
+/**
+ * 鼠标hover时，显示时间标签
+ *
+ */
+const MouseTimeDisplay = videojs.getComponent('MouseTimeDisplay');
+class DvrMouseTimeDisplay extends MouseTimeDisplay{
+  update(seekBarRect, seekBarPoint) {
+    if (this.rafId_) {
+      this.cancelAnimationFrame(this.rafId_);
+    }
+
+    this.rafId_ = this.requestAnimationFrame(() => {
+      const maxTimeShift = this.player_.Dvr().dvrData['maxTimeShift'];
+      const content = videojs.formatTime((1-seekBarPoint) * maxTimeShift, maxTimeShift);
+
+      this.el_.style.left = `${seekBarRect.width * seekBarPoint}px`;
+      this.getChild('timeTooltip').update(seekBarRect, seekBarPoint, content);
+    });
+  }
+}
+videojs.registerComponent('DvrMouseTimeDisplay',DvrMouseTimeDisplay);
 
 /**
  * 返回直播视频按钮
@@ -183,10 +237,9 @@ class LiveButton extends Button{
   }
   handleClick (event) {
     this.player_.Dvr().seekToLive();
-    // this.player_.play();
   }
 }
-LiveButton.prototype.controlText_= 'Skip back to live';
+LiveButton.prototype.controlText_= '返回直播';
 videojs.registerComponent('LiveButton',LiveButton);
 
 
