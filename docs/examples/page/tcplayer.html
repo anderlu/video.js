@@ -32,7 +32,16 @@
     .vjs-dvr:not(.vjs-dvr-live) .vjs-live-display:before {
       background: #566377;
     }
-
+    .vjs-live .vjs-live-display:before {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin-right: .4em;
+      vertical-align: 4%;
+      background: #f51717;
+      content: '';
+      border-radius: 50%;
+    }
   </style>
 </head>
 <body>
@@ -47,7 +56,7 @@
 //  (function () {
 
 var beforeSetup = function(videoEl, options) {
-  console.log('beforesetup', videoEl, options);
+//  console.log('beforesetup', videoEl, options);
 //  TcPlayer.getComponent('Player').prototype.options_.children.splice(0,1);//改变初始化组件
   return options;
 };
@@ -59,7 +68,7 @@ TcPlayer.hook('beforesetup', beforeSetup);
       poster:'//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg',
       sources: [{
 //        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
-        src: '//playtimeshift.live.myqcloud.com/6000/6000_I1UH1yKnrIw/timeshift.m3u8?delay=1&appid=3',
+        src: '//playtimeshift.live.myqcloud.com/6000/6000_WBixAyscDSc/timeshift.m3u8?delay=500&appid=3',
 //        src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
 //        src: '//4230.liveplay.myqcloud.com/live/4230_201708101049450061312437_1.m3u8',
         type: 'application/x-mpegURL'

@@ -21,7 +21,7 @@ export function setSource(player, src, next) {
   // resourceLoader('//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js', {
   //   success: function () {
   //     console.log('load hls done');
-  player.setTimeout(() => setSourceHelper(src, middlewares[src.type], next, player), 1000);
+  player.setTimeout(() => setSourceHelper(src, middlewares[src.type], next, player), 1);
   //   }
   // });
 }

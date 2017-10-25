@@ -29,6 +29,10 @@ class DvrProgressControl extends Component{
       className: 'vjs-progress-control vjs-control tcp-dvr-progress-control'
     });
   }
+  update(percent){
+    console.log('DvrProgressControl update', percent);
+    this.getChild('DvrSeekBar').update(percent);
+  }
   /**
    * 鼠标在DvrProgressControl上方移动时，获取事件并根据鼠标的相对位置进行计算时间
    */
@@ -42,9 +46,9 @@ class DvrProgressControl extends Component{
     }
   }
   handleMouseUp(event){
-    console.log('DvrProgressControl mouseup');
+    // console.log('DvrProgressControl mouseup');
     const dvrSeekBar = this.getChild('DvrSeekBar');
-    // dvrSeekBar.handleMouseUp(event);
+    dvrSeekBar.handleMouseUp(event);
   }
 }
 DvrProgressControl.prototype.options_ = {
@@ -64,8 +68,6 @@ class DvrSeekBar extends Slider {
     super(player, options);
     this.percent_ = 1;
     this.update = _.throttle(videojs.bind(this, this.update), 50);
-    // this.on('mousemove', this.handleMouseMove);
-
     // console.log('DvrSeekBar init vertical:', this.vertical()) // false
     this.on(player, 'seekToLive',videojs.bind(this, function (event) {
       this.update(event.data);
@@ -119,20 +121,13 @@ class DvrSeekBar extends Slider {
     this.update(percent);
   }
   handleMouseUp(event) {
-    this.isMouseDown = false;
-    const doc = this.el_;
-
+    super.handleMouseUp();
     let percent = this.calculateDistance(event);
     //slider handleMouseUp 会调用 update 方法，但是没有传入参数，会影响DvrSeekBar的update逻辑
-    super.handleMouseUp();
     console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
     this.update(percent);
     //设置时移播放地址
-    this.player_.Dvr().timeShit(percent);
-
-    this.off(doc, 'mouseup', this.handleMouseUp);
-    this.off(doc, 'touchmove', this.handleMouseMove);
-    this.off(doc, 'touchend', this.handleMouseUp);
+    this.player_.Dvr().timeShift(percent);
   }
   stepBack() {
 
@@ -235,12 +230,38 @@ class LiveButton extends Button{
     el.appendChild(this.contentEl_);
     return el;
   }
+  update(){
+
+  }
+  updateControlText(isLive){
+    this.controlText(isLive ? '直播中' : '返回直播');
+  }
   handleClick (event) {
     this.player_.Dvr().seekToLive();
+
   }
 }
 LiveButton.prototype.controlText_= '返回直播';
 videojs.registerComponent('LiveButton',LiveButton);
+
+var play_button_svg = '<svg height="100%" width="100%" viewBox="0 14 96 68">'
+  +'<path d="M96,44.3v7.3c-0.1,7.7-1,15.5-1,15.5s-0.9,6.6-3.8,9.5c-3.6,3.8-'
+  +'7.7,3.8-9.6,4c-13.4,1-33.5,0.9-33.5,0.9 c-0.8,0-25-0.2-32.5-0.9c-2.1-0.4'
+  +'-6.9-0.3-10.6-4.1c-2.9-2.9-3.8-9.5-3.8-9.5s-1-7.7-1.1-15.5v-7.3c0.2-7.8,'
+  +'1.1-15.5,1.1-15.5 s0.9-6.6,3.8-9.5c3.6-3.8,7.7-3.8,9.6-4.1c13.4-1,33.5-'
+  +'0.9,33.5-0.9s20.1-0.1,33.5,0.9c1.9,0.2,5.9,0.2,9.6,4.1 c2.9,2.9,3.8,9.5,'
+  +'3.8,9.5S95.9,36.6,96,44.3z M38.3,61.4L64,47.9L38.3,34.4V61.4z"/>'
+  +'<polygon points="64,47.9 38.3,61.4 38.3,34.4" fill="#fff"/>'
+  +'</svg>';
+var BigPlayButton = videojs.getComponent('BigPlayButton');
+BigPlayButton.prototype.createEl = function(){
+  var el = Button.prototype.createEl.call(this);
+  el.appendChild(videojs.createEl('div', {
+    className: 'vjs-button-icon',
+    innerHTML: play_button_svg,
+  }));
+  return el;
+};
 
 
 

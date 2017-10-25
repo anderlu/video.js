@@ -20,6 +20,31 @@ class Html5HlsJS{
     this.hls = hls;
     this.manifests = [];
     //处理异常
+    function errorHandlerFactory() {
+      var _recoverDecodingErrorDate = null;
+      var _recoverAudioCodecErrorDate = null;
+
+      return function() {
+        var now = Date.now();
+
+        if (!_recoverDecodingErrorDate || (now - _recoverDecodingErrorDate) > 2000) {
+          _recoverDecodingErrorDate = now;
+          hls.recoverMediaError();
+        }
+        else if (!_recoverAudioCodecErrorDate || (now - _recoverAudioCodecErrorDate) > 2000) {
+          _recoverAudioCodecErrorDate = now;
+          hls.swapAudioCodec();
+          hls.recoverMediaError();
+        }
+        else {
+          console.error('Error loading media: File could not be played');
+        }
+      };
+    }
+
+    // create separate error handlers for hlsjs and the video tag
+    this.hlsjsErrorHandler = errorHandlerFactory();
+
     hls.on(Hls.Events.ERROR, this.onError.bind(this));
     hls.on(Hls.Events.MANIFEST_PARSED, this.onMetaData.bind(this));
     hls.on(Hls.Events.LEVEL_LOADED, this.onLevelLoaded.bind(this));
@@ -89,6 +114,19 @@ class Html5HlsJS{
   }
   onError(event,data){
     console.log('hlsjs onError', event, data);
+    if (data.fatal) {
+      switch (data.type) {
+        case Hls.ErrorTypes.NETWORK_ERROR:
+          this.hls.startLoad();
+          break;
+        case Hls.ErrorTypes.MEDIA_ERROR:
+          this.hlsjsErrorHandler();
+          break;
+        default:
+          console.error('Error loading media: File could not be played');
+          break;
+      }
+    }
   }
   duration(){
     return this._duration;
