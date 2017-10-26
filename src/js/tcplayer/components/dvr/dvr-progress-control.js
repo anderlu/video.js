@@ -4,7 +4,7 @@
  * Time: 9:44
  */
 import videojs from '../../../video.js';
-import _ from 'lodash';
+import throttle from 'lodash/throttle';
 /**
  * 处理视频时移回看的进度条逻辑，mousemove时显示可以点击或拖拽的时间戳
  * @extends Component
@@ -30,7 +30,7 @@ class DvrProgressControl extends Component{
     });
   }
   update(percent){
-    console.log('DvrProgressControl update', percent);
+    // console.log('DvrProgressControl update', percent);
     this.getChild('DvrSeekBar').update(percent);
   }
   /**
@@ -67,7 +67,8 @@ class DvrSeekBar extends Slider {
   constructor(player, options) {
     super(player, options);
     this.percent_ = 1;
-    this.update = _.throttle(videojs.bind(this, this.update), 50);
+    this.update = throttle(videojs.bind(this, this.update), 50);
+    // this.update = videojs.bind(this, this.update);
     // console.log('DvrSeekBar init vertical:', this.vertical()) // false
     this.on(player, 'seekToLive',videojs.bind(this, function (event) {
       this.update(event.data);
@@ -124,7 +125,7 @@ class DvrSeekBar extends Slider {
     super.handleMouseUp();
     let percent = this.calculateDistance(event);
     //slider handleMouseUp 会调用 update 方法，但是没有传入参数，会影响DvrSeekBar的update逻辑
-    console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
+    // console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
     this.update(percent);
     //设置时移播放地址
     this.player_.Dvr().timeShift(percent);
@@ -202,7 +203,7 @@ class DvrMouseTimeDisplay extends MouseTimeDisplay{
 
     this.rafId_ = this.requestAnimationFrame(() => {
       const maxTimeShift = this.player_.Dvr().dvrData['maxTimeShift'];
-      const content = videojs.formatTime((1-seekBarPoint) * maxTimeShift, maxTimeShift);
+      const content = '回看'+videojs.formatTime((1-seekBarPoint) * maxTimeShift, maxTimeShift);
 
       this.el_.style.left = `${seekBarRect.width * seekBarPoint}px`;
       this.getChild('timeTooltip').update(seekBarRect, seekBarPoint, content);
@@ -243,26 +244,3 @@ class LiveButton extends Button{
 }
 LiveButton.prototype.controlText_= '返回直播';
 videojs.registerComponent('LiveButton',LiveButton);
-
-var play_button_svg = '<svg height="100%" width="100%" viewBox="0 14 96 68">'
-  +'<path d="M96,44.3v7.3c-0.1,7.7-1,15.5-1,15.5s-0.9,6.6-3.8,9.5c-3.6,3.8-'
-  +'7.7,3.8-9.6,4c-13.4,1-33.5,0.9-33.5,0.9 c-0.8,0-25-0.2-32.5-0.9c-2.1-0.4'
-  +'-6.9-0.3-10.6-4.1c-2.9-2.9-3.8-9.5-3.8-9.5s-1-7.7-1.1-15.5v-7.3c0.2-7.8,'
-  +'1.1-15.5,1.1-15.5 s0.9-6.6,3.8-9.5c3.6-3.8,7.7-3.8,9.6-4.1c13.4-1,33.5-'
-  +'0.9,33.5-0.9s20.1-0.1,33.5,0.9c1.9,0.2,5.9,0.2,9.6,4.1 c2.9,2.9,3.8,9.5,'
-  +'3.8,9.5S95.9,36.6,96,44.3z M38.3,61.4L64,47.9L38.3,34.4V61.4z"/>'
-  +'<polygon points="64,47.9 38.3,61.4 38.3,34.4" fill="#fff"/>'
-  +'</svg>';
-var BigPlayButton = videojs.getComponent('BigPlayButton');
-BigPlayButton.prototype.createEl = function(){
-  var el = Button.prototype.createEl.call(this);
-  el.appendChild(videojs.createEl('div', {
-    className: 'vjs-button-icon',
-    innerHTML: play_button_svg,
-  }));
-  return el;
-};
-
-
-
-

@@ -159,6 +159,27 @@ const umdTcPlayer = {
   moduleName: 'TcPlayer',
   dest: 'dist/TcPlayer.js'
 };
+const minifiedUmdTcPlayer = Object.assign({}, _.cloneDeep(umdTcPlayer), {
+  dest: 'dist/TcPlayer.min.js'
+});
+
+minifiedUmdTcPlayer.options.plugins.splice(4, 0, uglify({
+  preserveComments: 'some',
+  screwIE8: false,
+  mangle: true,
+  compress: {
+    /* eslint-disable camelcase */
+    sequences: true,
+    dead_code: true,
+    conditionals: true,
+    booleans: true,
+    unused: true,
+    if_return: true,
+    join_vars: true,
+    drop_console: true
+    /* eslint-enable camelcase */
+  }
+}));
 
 function runRollup({options, useStrict, format, dest, banner, moduleName}) {
   rollup(options)
@@ -181,6 +202,7 @@ if (!args.watch) {
   if (args.minify) {
     runRollup(minifiedUmd);
     runRollup(minifiedNovttUmd);
+    runRollup(minifiedUmdTcPlayer);
   } else {
     runRollup(es);
     runRollup(cjs);

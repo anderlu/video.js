@@ -15,7 +15,7 @@ const Plugin = videojs.getPlugin('plugin');
 
 /**
  * 时移插件，实现通过进度条控件，控制时移值，
- *
+ * Digital video recorder  Live Time Shift
  * delay
  *
  */
@@ -52,23 +52,30 @@ class Dvr extends Plugin{
     // 可以通过hls的 hlsManifestLoaded事件获取m3u8数据，然而dvr初始化时，hls已经开始加载并触发事件，所以在这里监听hls时间可能达不到预期的目的
     this.parseM3u8(hlsProvider.manifests[0]);
     // 初始时移值
-    this.delay = utils.getParams('delay', hlsProvider.hls.url) || 0;
+    this.delay = utils.getParams('delay', player.tech_.currentSource_.src) || 0;
     // 没有检测到必要的参数，退出初始化过程
     if(!this.dvrData['startTime']){
       return;
     }
+    player.addClass('vjs-dvr');
     remove_child(player.controlBar, 'ProgressControl');
     let control = player.controlBar.addChild('DvrProgressControl', {}, 5);
     remove_child(player.controlBar, 'LiveDisplay');
     let liveButton = player.controlBar.addChild('LiveButton', {}, 6);
-    player.addClass('vjs-dvr');
 
-    if(this.isLive()){
-      player.addClass('vjs-dvr-live');
-    }else{
-      control.update(1 - this.delay / this.dvrData.maxTimeShift);
-    }
-    liveButton.updateControlText(this.isLive());
+    // if(this.isLive()){
+    //   player.addClass('vjs-dvr-live');
+    // }else{
+    //   control.update(1 - this.delay / this.dvrData.maxTimeShift);
+    // }
+    // liveButton.updateControlText(this.isLive());
+    this.updateControl(!this.isLive());
+    //当通过player.src切换地址时，仍需要更新状态
+    player.on('loadedmetadata', videojs.bind(this, function () {
+      this.parseM3u8(hlsProvider.manifests[0]);
+      this.delay = utils.getParams('delay', player.tech_.currentSource_.src) || 0;
+      this.updateControl(true);
+    }));
   }
   seekToLive (){
     // console.log('seekToLive', this.player);
@@ -77,7 +84,16 @@ class Dvr extends Plugin{
       this.player.trigger({ type: 'seekToLive', data: 1 });
     }
   }
-
+  updateControl(updateProgress){
+    let player = this.player,
+        dvrProgressControl = player.getChild('ControlBar').getChild('DvrProgressControl'),
+        liveButton = player.getChild('ControlBar').getChild('LiveButton');
+    player.toggleClass('vjs-dvr-live', this.isLive());
+    liveButton.updateControlText(this.isLive());
+    if(updateProgress){
+      dvrProgressControl.update(1 - this.delay / this.dvrData.maxTimeShift);
+    }
+  }
   /**
    * 返回是否是直播中，timshift值等于0
    */
@@ -105,8 +121,7 @@ class Dvr extends Plugin{
     // player.one('loadedmetadata', videojs.bind(this, function () {
     //     console.log('hlsManifestParsed');
         player.play();
-        player.toggleClass('vjs-dvr-live', this.isLive());
-        liveButton.updateControlText(this.isLive());
+        this.updateControl(false);
       })
     );
   }
