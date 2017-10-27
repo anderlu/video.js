@@ -22,76 +22,103 @@ const Plugin = videojs.getPlugin('plugin');
 class Dvr extends Plugin{
   constructor(player){
     super(player);
+    this.isInit = false;
     var self = this;
 
     player.ready(function(){
-      var seekable = player.seekable();
-      //在获取到m3u8后开始初始化 hlsManifestLoaded
-      player.tech_.on('hlsLevelLoaded', function (event) {
-        // console.log('hlsLevelLoaded', event);
-      });
-      if (player.duration() && seekable && seekable.length){
-        self.init();
-      }else{
+      let tech = player.tech(true);
+      let hlsProvider = tech.hlsProvider;
+      //采用hls.js时可以初始化Dvr组件
+      if(hlsProvider && hlsProvider.Hls){
+        let Hls = hlsProvider.Hls;
+        //在获取到m3u8后开始初始化 hlsManifestLoaded
+        tech.one(Hls.Events.MANIFEST_LOADED, function (event) {
+          console.log(Hls.Events.MANIFEST_LOADED, event);
+        });
+        tech.one(Hls.Events.LEVEL_LOADED, function (event) {
+          console.log(Hls.Events.LEVEL_LOADED, event);
+        });
+        //
         player.one('loadedmetadata', function(event){
           console.log('loadedmetadata', event);
-          player.tech_.el_.setAttribute('poster','');
-          if (!player.tech_.flashlsProvider) {
-            self.init();
-            return;
-          }
+          //避免时移切换的时候 video的poster自动显示
+          tech.el_.setAttribute('poster','');
+          self.init();
+          return;
         });
       }
-
       //networkError 触发后需要回到直播状态
     });
   }
   init() {
     let player = this.player;
-    let hlsProvider = player.tech_.hlsProvider;
+    let hlsProvider = player.tech(true).hlsProvider;
     // 可以通过hls的 hlsManifestLoaded事件获取m3u8数据，然而dvr初始化时，hls已经开始加载并触发事件，所以在这里监听hls时间可能达不到预期的目的
+    // 解析当前播放的m3u8
     this.parseM3u8(hlsProvider.manifests[0]);
-    // 初始时移值
-    this.delay = utils.getParams('delay', player.tech_.currentSource_.src) || 0;
-    // 没有检测到必要的参数，退出初始化过程
-    if(!this.dvrData['startTime']){
+    // 没有检测到必要的参数，退出初始化过程，当再次播放时，按需重新初始化
+    if(!this.dvrData['startTime'] && !this.isInit){
+      player.one('loadedmetadata', videojs.bind(this, function (event) {
+        console.log('loadedmetadata1', this.isInit, hlsProvider);
+          this.init();
+      }));
       return;
     }
-    player.addClass('vjs-dvr');
-    remove_child(player.controlBar, 'ProgressControl');
-    let control = player.controlBar.addChild('DvrProgressControl', {}, 5);
-    remove_child(player.controlBar, 'LiveDisplay');
-    let liveButton = player.controlBar.addChild('LiveButton', {}, 6);
-
-    // if(this.isLive()){
-    //   player.addClass('vjs-dvr-live');
-    // }else{
-    //   control.update(1 - this.delay / this.dvrData.maxTimeShift);
-    // }
-    // liveButton.updateControlText(this.isLive());
+    console.log('init', this);
+    this.initControl();
+    // 初始时移值
+    this.delay = utils.getParams('delay', player.tech_.currentSource_.src) || 0;
     this.updateControl(!this.isLive());
     //当通过player.src切换地址时，仍需要更新状态
     player.on('loadedmetadata', videojs.bind(this, function () {
+      console.log('loadedmetadata2', hlsProvider);
       this.parseM3u8(hlsProvider.manifests[0]);
       this.delay = utils.getParams('delay', player.tech_.currentSource_.src) || 0;
-      this.updateControl(true);
+      this.updateControl();
+
     }));
+    this.isInit = true;
+  }
+  initControl(){
+    let player = this.player;
+    player.addClass('vjs-dvr');
+    player.controlBar.getChild('ProgressControl').hide();
+    player.controlBar.getChild('LiveDisplay').hide();
+    // removeChild(player.controlBar, 'ProgressControl');
+    // removeChild(player.controlBar, 'LiveDisplay');
+    player.controlBar.addChild('DvrProgressControl', {}, 5);
+    player.controlBar.addChild('liveButton', {}, 6);
+  }
+  updateControl(updateProgress){
+    let player = this.player,
+        progressControl = player.controlBar.getChild('ProgressControl'),
+        liveDisplay = player.controlBar.getChild('LiveDisplay'),
+        dvrProgressControl = player.controlBar.getChild('DvrProgressControl'),
+        liveButton = player.controlBar.getChild('LiveButton');
+    player.toggleClass('vjs-dvr-live', this.isLive());
+    liveButton.updateControlText(this.isLive());
+    if(updateProgress){
+      dvrProgressControl.update(1 - this.delay / this.dvrData.maxTimeShift);
+    }
+    //是否播放时移hls
+    if(this.dvrData['startTime']){
+      dvrProgressControl.show();
+      liveButton.show();
+      progressControl.hide();
+      liveDisplay.hide();
+    }else{
+      //非时移hls
+      dvrProgressControl.hide();
+      liveButton.hide();
+      progressControl.show();
+      liveDisplay.show();
+    }
   }
   seekToLive (){
     // console.log('seekToLive', this.player);
     if(!this.isLive()){
       this.timeShift(1);
       this.player.trigger({ type: 'seekToLive', data: 1 });
-    }
-  }
-  updateControl(updateProgress){
-    let player = this.player,
-        dvrProgressControl = player.getChild('ControlBar').getChild('DvrProgressControl'),
-        liveButton = player.getChild('ControlBar').getChild('LiveButton');
-    player.toggleClass('vjs-dvr-live', this.isLive());
-    liveButton.updateControlText(this.isLive());
-    if(updateProgress){
-      dvrProgressControl.update(1 - this.delay / this.dvrData.maxTimeShift);
     }
   }
   /**
@@ -121,7 +148,7 @@ class Dvr extends Plugin{
     // player.one('loadedmetadata', videojs.bind(this, function () {
     //     console.log('hlsManifestParsed');
         player.play();
-        this.updateControl(false);
+        // this.updateControl(false);
       })
     );
   }
@@ -154,7 +181,7 @@ class Dvr extends Plugin{
   }
 }
 
-function remove_child(component, child_name){
+function removeChild(component, child_name){
   var child = component.getChild(child_name);
   component.removeChild(child);
   child.dispose();

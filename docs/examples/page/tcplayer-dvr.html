@@ -59,7 +59,7 @@
 </video>
 <div class="pure-form" style="width: 670px; margin: 0 auto;">
   <legend> </legend>
-    <input id="video-url" style="width:600px" type="text" class="" placeholder="输入支持直播回看的HLS地址" value="//playtimeshift.live.myqcloud.com/6000/6000_3-DqBofUKuw/timeshift.m3u8?delay=0&appid=3">
+    <input id="video-url" style="width:600px" type="text" class="" placeholder="输入支持直播回看的HLS地址" value="//playtimeshift.live.myqcloud.com/6000/6000_h6idpxE3GYg/timeshift.m3u8?delay=0&appid=3">
     <button id="btn-play" class="pure-button pure-button-primary">播放</button>
 </div>
 <div id="log" style="width: 670px; margin: 0 auto;">
@@ -68,9 +68,12 @@
 <script>
     var player = TcPlayer('player1',{
       poster:'//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg',
+      plugins:{
+        'Dvr': {}
+      },
       sources: [{
-        src: '//playtimeshift.live.myqcloud.com/6000/6000_9S-s=4BCJNY/timeshift.m3u8?delay=0&appid=3',
-//        src: '//1253131631.vod2.myqcloud.com/db1acaa1vodtransgzp1253131631/63c80a0e9031868223386159708/master_playlist.m3u8',
+//        src: '//playtimeshift.live.myqcloud.com/6000/6000_h6idpxE3GYg/timeshift.m3u8?delay=0&appid=3',
+        src: '//1253131631.vod2.myqcloud.com/db1acaa1vodtransgzp1253131631/63c80a0e9031868223386159708/master_playlist.m3u8',
         type: 'application/x-mpegURL'
       }]
     });

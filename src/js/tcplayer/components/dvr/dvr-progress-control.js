@@ -16,7 +16,6 @@ class DvrProgressControl extends Component{
     // this.handleMouseMove = _.throttle(this.handleMouseMove.bind(this), 25);
     this.on('mousemove', this.handleMouseMove);
     this.on('mouseup', this.handleMouseUp);
-
   }
   /**
    * Create the `Component`'s DOM element
@@ -128,7 +127,7 @@ class DvrSeekBar extends Slider {
     // console.log('DvrSeekBar mouseUp', this.calculateDistance(event));
     this.update(percent);
     //设置时移播放地址
-    this.player_.Dvr().timeShift(percent);
+    this.player().Dvr().timeShift(percent);
   }
   stepBack() {
 
@@ -202,8 +201,8 @@ class DvrMouseTimeDisplay extends MouseTimeDisplay{
     }
 
     this.rafId_ = this.requestAnimationFrame(() => {
-      const maxTimeShift = this.player_.Dvr().dvrData['maxTimeShift'];
-      const content = '回看'+videojs.formatTime((1-seekBarPoint) * maxTimeShift, maxTimeShift);
+      const maxTimeShift = this.player().Dvr().dvrData['maxTimeShift'];
+      const content = videojs.formatTime((1-seekBarPoint) * maxTimeShift, maxTimeShift);
 
       this.el_.style.left = `${seekBarRect.width * seekBarPoint}px`;
       this.getChild('timeTooltip').update(seekBarRect, seekBarPoint, content);
@@ -238,7 +237,7 @@ class LiveButton extends Button{
     this.controlText(isLive ? '直播中' : '返回直播');
   }
   handleClick (event) {
-    this.player_.Dvr().seekToLive();
+    this.player().Dvr().seekToLive();
 
   }
 }

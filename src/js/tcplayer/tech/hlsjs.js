@@ -15,35 +15,13 @@ class Html5HlsJS{
   constructor(source, tech, options){
     let hls = new Hls(options.hlsjsConfig);
     let video = tech.el();
-
+    this.Hls = Hls;
     this.tech = tech;
     this.hls = hls;
     this.manifests = [];
     //处理异常
-    function errorHandlerFactory() {
-      var _recoverDecodingErrorDate = null;
-      var _recoverAudioCodecErrorDate = null;
-
-      return function() {
-        var now = Date.now();
-
-        if (!_recoverDecodingErrorDate || (now - _recoverDecodingErrorDate) > 2000) {
-          _recoverDecodingErrorDate = now;
-          hls.recoverMediaError();
-        }
-        else if (!_recoverAudioCodecErrorDate || (now - _recoverAudioCodecErrorDate) > 2000) {
-          _recoverAudioCodecErrorDate = now;
-          hls.swapAudioCodec();
-          hls.recoverMediaError();
-        }
-        else {
-          console.error('Error loading media: File could not be played');
-        }
-      };
-    }
-
     // create separate error handlers for hlsjs and the video tag
-    this.hlsjsErrorHandler = errorHandlerFactory();
+    this.hlsjsErrorHandler = this.errorHandlerFactory();
 
     hls.on(Hls.Events.ERROR, this.onError.bind(this));
     hls.on(Hls.Events.MANIFEST_PARSED, this.onMetaData.bind(this));
@@ -65,8 +43,10 @@ class Html5HlsJS{
     // console.log('hlsjs onEvent', event, data);
     this.tech.trigger({ type: event, data: data });
     switch (event){
+      //m3u8列表加载成功后，保存列表信息，可进一步分析里面的数值，比如直播回看Dvr.js需要解析出直播流的开始时间和可时移时长
       case Hls.Events.MANIFEST_LOADED:
         this.manifests.push(data.networkDetails.response || data.networkDetails.responseText);
+        console.log(Hls.Events.MANIFEST_LOADED, this.manifests);
         break;
     }
   }
@@ -117,7 +97,7 @@ class Html5HlsJS{
     if (data.fatal) {
       switch (data.type) {
         case Hls.ErrorTypes.NETWORK_ERROR:
-          this.hls.startLoad();
+          // this.hls.startLoad();
           break;
         case Hls.ErrorTypes.MEDIA_ERROR:
           this.hlsjsErrorHandler();
@@ -127,6 +107,28 @@ class Html5HlsJS{
           break;
       }
     }
+  }
+  errorHandlerFactory(){
+    let hls = this.hls;
+    var _recoverDecodingErrorDate = null;
+    var _recoverAudioCodecErrorDate = null;
+
+    return function() {
+      var now = Date.now();
+
+      if (!_recoverDecodingErrorDate || (now - _recoverDecodingErrorDate) > 2000) {
+        _recoverDecodingErrorDate = now;
+        hls.recoverMediaError();
+      }
+      else if (!_recoverAudioCodecErrorDate || (now - _recoverAudioCodecErrorDate) > 2000) {
+        _recoverAudioCodecErrorDate = now;
+        hls.swapAudioCodec();
+        hls.recoverMediaError();
+      }
+      else {
+        console.error('Error loading media: File could not be played');
+      }
+    };
   }
   duration(){
     return this._duration;

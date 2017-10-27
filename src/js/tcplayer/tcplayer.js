@@ -12,18 +12,17 @@ import CN from  '../../../lang/zh-CN.json';
 
 // import resourceLoader from './utils/resource-loader';
 
-window.videojs = videojs;
-
 // resourceLoader('../../../dist/video-js.css', {
 //   success: function () {
 //     console.log('load css done');
 //   }
 // });
+
+// window.videojs = videojs;
 videojs.addLanguage('zh-CN', CN);
 function TcPlayer(id, options, ready) {
   // TODO
   var plugins = {
-    'Dvr': {}
   };
   options.plugins = videojs.mergeOptions(options.plugins, plugins);
   options.language = options.language || 'zh-CN';
