@@ -27,7 +27,7 @@ class Dvr extends Plugin{
 
     player.ready(function(){
       let tech = player.tech(true);
-      let hlsProvider = tech.hlsProvider;
+      let hlsProvider = tech && tech.hlsProvider;
       //采用hls.js时可以初始化Dvr组件
       if(hlsProvider && hlsProvider.Hls){
         let Hls = hlsProvider.Hls;

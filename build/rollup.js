@@ -151,7 +151,12 @@ const umdTcPlayer = {
       args.progress ? progress() : {},
       filesize()
     ],
-    legacy: true
+    legacy: true,
+    /* 避免打包外部lib */
+    external: ['hls.js'],
+    globals:{
+      'hls.js':'Hls'
+    }
   },
   banner: compiledLicense(Object.assign({includesVtt: true}, bannerData)),
   useStrict: false,
@@ -213,22 +218,22 @@ if (!args.watch) {
 } else {
   const props = ['format', 'dest', 'banner', 'useStrict'];
   const watchers = [
-    ['es', watch({rollup},
-                 Object.assign({},
-                               es.options,
-                               _.pick(es, props)))],
-    ['cjs', watch({rollup},
-                  Object.assign({},
-                                cjs.options,
-                                _.pick(cjs, props)))],
-    ['umd', watch({rollup},
-                  Object.assign({moduleName: 'videojs'},
-                                umd.options,
-                                _.pick(umd, props)))],
-    ['novtt', watch({rollup},
-                    Object.assign({moduleName: 'videojs'},
-                                  novttUmd.options,
-                                  _.pick(novttUmd, props)))],
+    // ['es', watch({rollup},
+    //              Object.assign({},
+    //                            es.options,
+    //                            _.pick(es, props)))],
+    // ['cjs', watch({rollup},
+    //               Object.assign({},
+    //                             cjs.options,
+    //                             _.pick(cjs, props)))],
+    // ['umd', watch({rollup},
+    //               Object.assign({moduleName: 'videojs'},
+    //                             umd.options,
+    //                             _.pick(umd, props)))],
+    // ['novtt', watch({rollup},
+    //                 Object.assign({moduleName: 'videojs'},
+    //                               novttUmd.options,
+    //                               _.pick(novttUmd, props)))],
     ['umdTcPlayer', watch({rollup},
                   Object.assign({moduleName: 'TcPlayer'},
                     umdTcPlayer.options,

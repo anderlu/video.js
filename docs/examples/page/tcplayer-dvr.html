@@ -8,48 +8,11 @@
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
   <link href="../../../dist/TcPlayer.css" rel="stylesheet">
   <!--<script src="../../../dist/ie8/videojs-ie8.js"></script>-->
+  <script src="//cdn.bootcss.com/hls.js/0.8.4/hls.js"></script>
   <script src="../../../dist/TcPlayer.js"></script>
   <style>
     .video-js{
       margin:0 auto;
-    }
-    .vjs-dvr .vjs-progress-control {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: -ms-flexbox;
-      display: flex;
-    }
-    .vjs-dvr .vjs-live-control {
-      flex: inherit;
-      cursor: pointer;
-    }
-    .vjs-dvr .vjs-live-control .vjs-tooltip {
-      line-height: 1em;
-    }
-    .vjs-dvr-live .vjs-live-control .vjs-tooltip {
-      display: none;
-    }
-    .vjs-dvr-live .vjs-live-control {
-      cursor: default;
-    }
-    .vjs-dvr .vjs-live-display{
-      margin:0 auto;
-    }
-    .vjs-dvr:not(.vjs-dvr-live) .vjs-live-display:before {
-      background: #566377;
-    }
-    .vjs-live .vjs-live-display:before {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      margin-right: .4em;
-      vertical-align: 4%;
-      background: #f51717;
-      content: '';
-      border-radius: 50%;
-    }
-    button{
-      outline:none;
     }
   </style>
 </head>
@@ -59,7 +22,7 @@
 </video>
 <div class="pure-form" style="width: 670px; margin: 0 auto;">
   <legend> </legend>
-    <input id="video-url" style="width:600px" type="text" class="" placeholder="输入支持直播回看的HLS地址" value="//playtimeshift.live.myqcloud.com/6000/6000_h6idpxE3GYg/timeshift.m3u8?delay=0&appid=3">
+    <input id="video-url" style="width:600px" type="text" class="" placeholder="输入支持直播回看的HLS地址" value="//playtimeshift.live.myqcloud.com/6000/6000_rlGiWMaK86U/timeshift.m3u8?delay=0&appid=3">
     <button id="btn-play" class="pure-button pure-button-primary">播放</button>
 </div>
 <div id="log" style="width: 670px; margin: 0 auto;">
@@ -72,7 +35,7 @@
         'Dvr': {}
       },
       sources: [{
-//        src: '//playtimeshift.live.myqcloud.com/6000/6000_h6idpxE3GYg/timeshift.m3u8?delay=0&appid=3',
+//        src: '//playtimeshift.live.myqcloud.com/6000/6000_rlGiWMaK86U/timeshift.m3u8?delay=0&appid=3',
         src: '//1253131631.vod2.myqcloud.com/db1acaa1vodtransgzp1253131631/63c80a0e9031868223386159708/master_playlist.m3u8',
         type: 'application/x-mpegURL'
       }]

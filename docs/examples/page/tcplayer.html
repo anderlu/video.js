@@ -7,49 +7,13 @@
   <title>TcPlayer Demo</title>
   <link href="../../../dist/TcPlayer.css" rel="stylesheet">
   <!--<script src="../../../dist/ie8/videojs-ie8.js"></script>-->
+  <!--<script src="//cdn.bootcss.com/hls.js/0.8.4/hls.js"></script>-->
   <script src="../../../dist/TcPlayer.js"></script>
+
   <!--<script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>-->
   <style>
     .video-js{
       margin:0 auto;
-    }
-    .vjs-dvr .vjs-progress-control {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: -ms-flexbox;
-      display: flex;
-    }
-    .vjs-dvr .vjs-live-control {
-      flex: inherit;
-      cursor: pointer;
-    }
-    .vjs-dvr .vjs-live-control .vjs-tooltip {
-      line-height: 1em;
-    }
-    .vjs-dvr-live .vjs-live-control .vjs-tooltip {
-      display: none;
-    }
-    .vjs-dvr-live .vjs-live-control {
-      cursor: default;
-    }
-    .vjs-dvr .vjs-live-display{
-      margin:0 auto;
-    }
-    .vjs-dvr:not(.vjs-dvr-live) .vjs-live-display:before {
-      background: #566377;
-    }
-    .vjs-live .vjs-live-display:before {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      margin-right: .4em;
-      vertical-align: 4%;
-      background: #f51717;
-      content: '';
-      border-radius: 50%;
-    }
-    button{
-      outline:none;
     }
   </style>
 </head>
@@ -76,6 +40,8 @@ TcPlayer.hook('beforesetup', beforeSetup);
       poster:'//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg',
       sources: [{
         src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
+//        src: '//1253504025.vod2.myqcloud.com/e43aaf22vodtransgzp1253504025/9cd301c29031868223064506239/CXkz7KiXk3cA.f230.m3u8',
+//        src: '//playtimeshift.live.myqcloud.com/6000/6000_rlGiWMaK86U/timeshift.m3u8?delay=0&appid=3',
 //        src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
 //        src: '//4230.liveplay.myqcloud.com/live/4230_201708101049450061312437_1.m3u8',
         type: 'application/x-mpegURL'

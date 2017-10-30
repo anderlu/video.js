@@ -165,7 +165,7 @@ var HlsSourceHandler = {
   }
 };
 
-if (Hls.isSupported()) {
+if (Hls && Hls.isSupported()) {
   try{
     var html5Tech = videojs.getTech && videojs.getTech('Html5');
     if (html5Tech) {
@@ -175,7 +175,6 @@ if (Hls.isSupported()) {
     console.error('videojs-hls.js init failed');
   }
 }else{
-  console.error('Hls.js is not supported in this browser!');
-
+  //没有引入hls.js,可以上报log
 }
 
