@@ -7,6 +7,8 @@ import videojs from '../video.js';
 //引入自定义模块
 import './plugins/dvr.js';
 import './tech/hlsjs.js';
+import './tech/flash/flash.js';
+import './tech/flash/flashls.js';
 import './components/skin/skin.js';
 import CN from  '../../../lang/zh-CN.json';
 

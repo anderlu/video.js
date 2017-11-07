@@ -7,7 +7,7 @@
   <title>TcPlayer Demo</title>
   <link href="../../../dist/TcPlayer.css" rel="stylesheet">
   <!--<script src="../../../dist/ie8/videojs-ie8.js"></script>-->
-  <!--<script src="//cdn.bootcss.com/hls.js/0.8.4/hls.js"></script>-->
+  <script src="//cdn.bootcss.com/hls.js/0.8.4/hls.js"></script>
   <script src="../../../dist/TcPlayer.js"></script>
 
   <!--<script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>-->
@@ -39,8 +39,8 @@ TcPlayer.hook('beforesetup', beforeSetup);
     var player = TcPlayer('player1',{
       poster:'//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg',
       sources: [{
-        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
-//        src: '//1253504025.vod2.myqcloud.com/e43aaf22vodtransgzp1253504025/9cd301c29031868223064506239/CXkz7KiXk3cA.f230.m3u8',
+//        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
+        src: '//1253131631.vod2.myqcloud.com/db1acaa1vodtransgzp1253131631/63c80a0e9031868223386159708/master_playlist.m3u8',
 //        src: '//playtimeshift.live.myqcloud.com/6000/6000_rlGiWMaK86U/timeshift.m3u8?delay=0&appid=3',
 //        src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
 //        src: '//4230.liveplay.myqcloud.com/live/4230_201708101049450061312437_1.m3u8',
@@ -49,6 +49,7 @@ TcPlayer.hook('beforesetup', beforeSetup);
         src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
         type: 'video/mp4'
       }],
+//      techOrder: ['flash','html5'],
       //config children play failed
 //      children: [o
 //        'bigPlayButton',
@@ -70,7 +71,7 @@ TcPlayer.hook('beforesetup', beforeSetup);
 //        console.log('loadedqualitydata', event);
       });
       player.tech_.on('hlsLevelLoaded', function (event) {
-//        console.log('hlsLevelLoaded', event);
+        console.log('hlsLevelLoaded', event);
       });
     });
 
