@@ -5,6 +5,9 @@
  */
 /**
  * 引入hls.js实现h5播放hls的功能
+ * 已实现的接口：
+ * 播放hls
+ *
  * @extends
  */
 
@@ -54,7 +57,7 @@ class Html5HlsJS{
     // console.log('hlsjs onMetaData', event, data);
     let cleanTracklist = [];
     let _hls = this.hls;
-
+    //更新hls level 数据
     if (data.levels.length > 1) {
       let autoLevel = {
         id: -1,
@@ -65,12 +68,12 @@ class Html5HlsJS{
     }
 
     data.levels.forEach(function(level, index) {
-      let quality = {}; // Don't write in level (shared reference with Hls.js)
-      quality.id = index;
-      quality.selected = index === _hls.manualLevel;
-      quality.label = _levelLabel(level);
+      let resolution = {}; // Don't write in level (shared reference with Hls.js)
+      resolution.id = index;
+      resolution.selected = index === _hls.manualLevel;
+      resolution.label = _levelLabel(level);
 
-      cleanTracklist.push(quality);
+      cleanTracklist.push(resolution);
     });
 
     var payload = {
@@ -78,7 +81,7 @@ class Html5HlsJS{
       qualitySwitchCallback: this.switchQuality
     };
     // console.log('hlsjs onMetaData', payload);
-
+    // 加载并解析master playlist后更新media playlist信息
     this.tech.trigger({ type: 'loadedqualitydata', data: payload });
 
     function _levelLabel(level) {
@@ -175,6 +178,6 @@ if (Hls && Hls.isSupported()) {
     console.error('videojs-hls.js init failed');
   }
 }else{
-  //没有引入hls.js,可以上报log
+  //没有引入hls.js,可上报log
 }
 
