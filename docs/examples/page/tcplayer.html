@@ -55,7 +55,12 @@ TcPlayer.hook('beforesetup', beforeSetup);
 //        'bigPlayButton',
 //        'controlBar'
 //      ],
-//      'playbackRates': [0.5, 1, 1.5, 2],
+      'playbackRates': [0.5, 1, 1.5, 2],
+      plugins:{
+        QualitySwitcher:{
+          name:'QualitySwitcher'
+        }
+      },
       controlBar: {
         volumePanel: true,
         fullscreenToggle: true,
@@ -71,7 +76,7 @@ TcPlayer.hook('beforesetup', beforeSetup);
 //        console.log('loadedqualitydata', event);
       });
       player.tech_.on('hlsLevelLoaded', function (event) {
-        console.log('hlsLevelLoaded', event);
+//        console.log('hlsLevelLoaded', event);
       });
     });
 

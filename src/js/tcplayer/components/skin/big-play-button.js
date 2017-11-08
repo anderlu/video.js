@@ -18,7 +18,7 @@ const Button = videojs.getComponent('Button');
 const BigPlayButton = videojs.getComponent('BigPlayButton');
 BigPlayButton.prototype.createEl = function(){
   var el = Button.prototype.createEl.call(this);
-  el.appendChild(videojs.createEl('div', {
+  el.appendChild(videojs.dom.createEl('div', {
     className: 'vjs-button-icon',
     innerHTML: play_button_svg,
   }));

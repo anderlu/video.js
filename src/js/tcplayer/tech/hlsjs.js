@@ -77,12 +77,14 @@ class Html5HlsJS{
     });
 
     var payload = {
-      qualityData: {video: cleanTracklist},
-      qualitySwitchCallback: this.switchQuality
+      qualityData: {video: cleanTracklist.reverse()},
+      callbacks: {video: videojs.bind(this, this.switchQuality)}
     };
     // console.log('hlsjs onMetaData', payload);
     // 加载并解析master playlist后更新media playlist信息
+    console.log({ type: 'loadedqualitydata', data: payload });
     this.tech.trigger({ type: 'loadedqualitydata', data: payload });
+    // this.tech.trigger('loadedqualitydata', payload);
 
     function _levelLabel(level) {
       if (level.height) return level.height + "p";

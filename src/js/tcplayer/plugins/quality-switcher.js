@@ -5,14 +5,16 @@
  *
  */
 import videojs from '../../video.js';
-import QualitySwtichMenuButton from '../components/quality-switcher/quality-switcher-menu-button';
+import QualitySwitcherMenuButton from '../components/quality-switcher/quality-switcher-menu-button';
+
 const Plugin = videojs.getPlugin('plugin');
-const SUPPORTED_TRACKS = ["video", "audio", "subtitle"];
+const TRACK_TYPES = ["video", "audio", "subtitle"];
 const TRACK_CLASS = {
   video: 'vjs-icon-hd',
   audio: 'vjs-icon-cog',
   subtitle: 'vjs-icon-subtitles'
 };
+
 class QualitySwitcher extends Plugin{
   /**
    * 1.在播放hls时，并解析到master playlist后初始化
@@ -22,27 +24,67 @@ class QualitySwitcher extends Plugin{
    * 切换清晰度时的回调函数
    * hls的回调
    * 普通切换的回调
+   *
    */
-  constructor(player){
-    super(player);
+  constructor(player, options){
+    super(player, options);
+    var self = this;
+    console.log('new QualitySwitcher', options);
     //注册事件，当触发load quality data时进行初始化
-    let tech = this.player.tech(true);
-    this.init = videojs.bind(this,this.init);
-    tech.on('loadedqualitydata', this.init);
+    player.ready(function(){
+      let tech = self.player.tech(true);
+      self.init = videojs.bind(self,self.init);
+      tech.on('loadedqualitydata', self.init);
+    });
   }
 
-  init(event, data){
-    let player = this.player;
-    let qualitySwitcherMenuButton = player.getChild('QualitySwtichMenuButton');
-    if(!qualitySwitcherMenuButton){
-      //创建menu button
-      qualitySwitcherMenuButton = new QualitySwitcherMenuButton(player, {});
-      player.controlBar.addChild(qualitySwitcherMenuButton);
-    }else{
+  /**
+   * 初始化 switcher
+   * @param event
+   * @param data
+   * ｛
+   *    qualityData：｛
+   *      'video':[{
+   *        'id': String
+   *        'label': String
+   *        'selected': Boolean
+   *      },{...}],
+   *      'audio:[{...},...]
+   *      'subtitle':[{...},...]
+   *    ｝
+   *    callbacks：｛
+   *      'video': function,
+   *      'audio': function,
+   *      'subtitle': function
+   *    ｝
+   * ｝
+   */
+  init(event){
+    let player = this.player,
+        qualityData = event.data.qualityData,
+        callbacks = event.data.callbacks;
+    //分别创建 video audio subtitle的switch
+    for (let i=0; i<TRACK_TYPES.length; i++) {
+      let track = TRACK_TYPES[i],
+          name = track + 'SwitcherMenuButton',
+          qualitySwitcherMenuButton = player.controlBar.getChild(name);
+
+      if (qualitySwitcherMenuButton) {
+        qualitySwitcherMenuButton.dispose();
+        player.controlBar.removeChild(qualitySwitcherMenuButton);
+      }
+
+      if (qualityData[track] && qualityData[track].length > 1) {
+        qualitySwitcherMenuButton = new QualitySwitcherMenuButton(player, {name, qualityList: qualityData[track], callback: callbacks[track], trackType: track});
+        // qualitySwitcherMenuButton.addClass(TRACK_CLASS[track]);
+        player.controlBar.addChild(qualitySwitcherMenuButton,{}, 10);
+      }
 
     }
-  }
 
+  }
 }
 
 videojs.registerPlugin('QualitySwitcher', QualitySwitcher);
+
+export default QualitySwitcher;
