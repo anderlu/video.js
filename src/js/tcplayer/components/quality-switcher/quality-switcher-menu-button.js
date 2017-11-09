@@ -9,7 +9,7 @@ class QualitySwitcherMenuButton extends MenuButton {
   createEl() {
     const el = super.createEl();
     this.labelEl_ = videojs.dom.createEl('div', {
-      className: 'quality-switcher-value',
+      className: 'tcp-quality-switcher-value',
       innerHTML: ''
     });
 
@@ -24,18 +24,22 @@ class QualitySwitcherMenuButton extends MenuButton {
     //创建item
     // console.log('createMenu QualitySwitcherMenuButton',this.options_);
     for(let i=0; i < qualityList.length; i++){
-      options = videojs.mergeOptions(qualityList[i], {
-        name: qualityList[i].label,
-        trackType: this.options_.trackType,
-        callback: this.options_.callback,
-        selectable: true
+      let qualityItem = qualityList[i];
+      options = videojs.mergeOptions(qualityItem, {
+        'name': qualityItem.label,
+        'trackType': this.options_.trackType,
+        'callback': this.options_.callback,
+        'selectable': true
       });
       menu.addItem(new QualitySwitcherMenuItem(this.player(), options));
+      if(qualityItem.selected){
+        this.updateLabel(qualityItem);
+      }
     }
     return menu;
   }
-  updateLabel() {
-    this.labelEl_.innerHTML = '';
+  updateLabel(data) {
+    this.labelEl_.innerHTML = '<p>'+data.label+'</p>';
   }
 }
 

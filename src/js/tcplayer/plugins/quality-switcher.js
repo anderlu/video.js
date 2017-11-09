@@ -10,9 +10,9 @@ import QualitySwitcherMenuButton from '../components/quality-switcher/quality-sw
 const Plugin = videojs.getPlugin('plugin');
 const TRACK_TYPES = ["video", "audio", "subtitle"];
 const TRACK_CLASS = {
-  video: 'vjs-icon-hd',
-  audio: 'vjs-icon-cog',
-  subtitle: 'vjs-icon-subtitles'
+  video: 'tcp-video-quality-switcher',
+  audio: 'tcp-audio-quality-switcher',
+  subtitle: 'tcp-subtitle-quality-switcher'
 };
 
 class QualitySwitcher extends Plugin{
@@ -66,7 +66,8 @@ class QualitySwitcher extends Plugin{
     //分别创建 video audio subtitle的switch
     for (let i=0; i<TRACK_TYPES.length; i++) {
       let track = TRACK_TYPES[i],
-          name = track + 'SwitcherMenuButton',
+          //name 用于区分是哪种选择器，在item 被选中后,item根据name通知控件更新状态
+          name = track + 'QualitySwitcherMenuButton',
           qualitySwitcherMenuButton = player.controlBar.getChild(name);
 
       if (qualitySwitcherMenuButton) {
@@ -76,7 +77,7 @@ class QualitySwitcher extends Plugin{
 
       if (qualityData[track] && qualityData[track].length > 1) {
         qualitySwitcherMenuButton = new QualitySwitcherMenuButton(player, {name, qualityList: qualityData[track], callback: callbacks[track], trackType: track});
-        // qualitySwitcherMenuButton.addClass(TRACK_CLASS[track]);
+        qualitySwitcherMenuButton.addClass(TRACK_CLASS[track]);
         player.controlBar.addChild(qualitySwitcherMenuButton,{}, 10);
       }
 

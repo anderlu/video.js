@@ -1,0 +1,25 @@
+.tcp-video-quality-switcher{
+
+  .tcp-quality-switcher-value{
+    pointer-events: none;
+    font-size: 1.2em;
+    display:table;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    // 未知高度垂直居中
+    p{
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+  .vjs-menu {
+    width: 6em;
+    left: 50%;
+    -webkit-transform:translate3d(-50%, -50%, 0);
+    transform:translate3d(-50%, -50%, 0);
+  }
+}

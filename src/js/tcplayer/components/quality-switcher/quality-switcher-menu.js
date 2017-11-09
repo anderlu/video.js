@@ -16,8 +16,6 @@ class QualitySwitcherMenu extends Menu{
         }else{
           //选中
           component.options_.selected = true;
-
-          console.log(component.options_);
         }
       }
     });
