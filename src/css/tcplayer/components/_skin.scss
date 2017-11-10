@@ -62,3 +62,8 @@
     transition: opacity 250ms ease;
   }
 }
+
+.vjs-button > .vjs-icon-placeholder:before {
+  //移动端的 单位line-height比PC端要高， 设置为2时pc端垂直居中，设置为1.67时移动端垂直居中
+  //line-height: 2;
+}

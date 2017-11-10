@@ -1,21 +1,15 @@
-/**
- * User: anderlu
- * Date: 2017/10/9
- * Time: 19:54
- */
-/**
- * 引入hls.js实现h5播放hls的功能
- * 已实现的接口：
- * 播放hls
- *
- * @extends
- */
-
 import videojs from  '../../video.js';
 import Hls from 'hls.js';
 
 class Html5HlsJS{
-  constructor(source, tech, options){
+  /**
+   * 引入hls.js实现h5播放hls的功能
+   * 已实现的接口：
+   * 播放hls
+   *
+   * @extends
+   */
+  constructor(source, tech, options) {
     let hls = new Hls(options.hlsjsConfig);
     let video = tech.el();
     this.Hls = Hls;
@@ -82,9 +76,7 @@ class Html5HlsJS{
     };
     // console.log('hlsjs onMetaData', payload);
     // 加载并解析master playlist后更新media playlist信息
-    console.log({ type: 'loadedqualitydata', data: payload });
     this.tech.trigger({ type: 'loadedqualitydata', data: payload });
-    // this.tech.trigger('loadedqualitydata', payload);
 
     function _levelLabel(level) {
       if (level.height) return level.height + "p";

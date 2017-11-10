@@ -1,9 +1,3 @@
-/**
- * Hls质量平滑切换依赖hls.js
- * 普通视频质量切换
- * 音频质量切换
- *
- */
 import videojs from '../../video.js';
 import QualitySwitcherMenuButton from '../components/quality-switcher/quality-switcher-menu-button';
 
@@ -17,6 +11,10 @@ const TRACK_CLASS = {
 
 class QualitySwitcher extends Plugin{
   /**
+   * Hls质量平滑切换依赖hls.js
+   * 普通视频质量切换
+   * 音频质量切换
+   *
    * 1.在播放hls时，并解析到master playlist后初始化
    * 2.在palyer初始化传入多个source，并设置了多清晰度的参数时，进行初始化
    *
@@ -26,8 +24,8 @@ class QualitySwitcher extends Plugin{
    * 普通切换的回调
    *
    */
-  constructor(player, options){
-    super(player, options);
+  constructor(player, options) {
+    super(player);
     var self = this;
     console.log('new QualitySwitcher', options);
     //注册事件，当触发load quality data时进行初始化
@@ -41,7 +39,7 @@ class QualitySwitcher extends Plugin{
   /**
    * 初始化 switcher
    * @param event
-   * @param data
+   * event.data
    * ｛
    *    qualityData：｛
    *      'video':[{
@@ -80,9 +78,7 @@ class QualitySwitcher extends Plugin{
         qualitySwitcherMenuButton.addClass(TRACK_CLASS[track]);
         player.controlBar.addChild(qualitySwitcherMenuButton,{}, 10);
       }
-
     }
-
   }
 }
 
