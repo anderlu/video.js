@@ -31,7 +31,10 @@ class Html5HlsJS{
     hls.loadSource(source.src);
   }
   switchQuality(qualityId){
-    this.hls.nextLevel = qualityId;
+    console.log(qualityId,this.hls.currentLevel, this.hls.nextLevel, this.hls);
+    if(qualityId != this.hls.currentLevel){
+      this.hls.nextLevel = qualityId;
+    }
   }
   dispose(){
     this.hls.destroy();
@@ -75,8 +78,12 @@ class Html5HlsJS{
       callbacks: {video: videojs.bind(this, this.switchQuality)}
     };
     // console.log('hlsjs onMetaData', payload);
-    // 加载并解析master playlist后更新media playlist信息
-    this.tech.trigger({ type: 'loadedqualitydata', data: payload });
+    // 加载并解析master playlist后更新media playlist信息，并发出事件。
+    // 为了避免hls解析快于插件初始化，导致插件不能正常触发时间，这里做延迟处理。
+    this.tech.setTimeout(function () {
+      this.trigger({ type: 'loadedqualitydata', data: payload });
+    },1);
+    // this.tech.trigger({ type: 'loadedqualitydata', data: payload });
 
     function _levelLabel(level) {
       if (level.height) return level.height + "p";

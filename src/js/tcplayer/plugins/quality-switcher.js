@@ -11,7 +11,7 @@ const TRACK_CLASS = {
 
 class QualitySwitcher extends Plugin{
   /**
-   * Hls质量平滑切换依赖hls.js
+   * Hls质量平滑切换，依赖hls.js
    * 普通视频质量切换
    * 音频质量切换
    *
@@ -26,14 +26,20 @@ class QualitySwitcher extends Plugin{
    */
   constructor(player, options) {
     super(player);
-    var self = this;
+    let self = this,
+        tech = this.player.tech(true);
+    this.init = videojs.bind(this,this.init);
     console.log('new QualitySwitcher', options);
     //注册事件，当触发load quality data时进行初始化
-    player.ready(function(){
-      let tech = self.player.tech(true);
-      self.init = videojs.bind(self,self.init);
-      tech.on('loadedqualitydata', self.init);
-    });
+    if(tech){
+      tech.on('loadedqualitydata', this.init);
+    }else{
+      player.ready(function(){
+        console.log('QualitySwitcher on ready', options);
+        tech = self.player.tech(true);
+        tech.on('loadedqualitydata', self.init);
+      });
+    }
   }
 
   /**
@@ -58,6 +64,7 @@ class QualitySwitcher extends Plugin{
    * ｝
    */
   init(event){
+    console.log('QualitySwitcher init ',event);
     let player = this.player,
         qualityData = event.data.qualityData,
         callbacks = event.data.callbacks;

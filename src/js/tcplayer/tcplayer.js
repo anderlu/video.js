@@ -26,6 +26,7 @@ videojs.addLanguage('zh-CN', CN);
 function TcPlayer(id, options, ready) {
   // TODO
   var plugins = {
+
   };
   options.plugins = videojs.mergeOptions(options.plugins, plugins);
   options.language = options.language || 'zh-CN';

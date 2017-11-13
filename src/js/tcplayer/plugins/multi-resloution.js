@@ -1,7 +1,7 @@
 import videojs from '../../video.js';
 
 const Plugin = videojs.getPlugin('plugin');
-class MutipleResloution extends Plugin{
+class MultiResloution extends Plugin{
   /**
    *
    * 用于支持传入多种分辨率，依赖 QualitySwitcher 做UI
@@ -20,6 +20,8 @@ class MutipleResloution extends Plugin{
   init() {
 
   }
+  switchResloution(id){
 
+  }
 }
-export default MutipleResloution;
+export default MultiResloution;
