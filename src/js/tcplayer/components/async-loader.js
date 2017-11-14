@@ -1,10 +1,10 @@
 /**
  * @file loader.js
  */
-import Component from '../component.js';
-import mergeOptions from '../utils/merge-options.js';
-import { isCrossOrigin } from '../utils/url.js';
-import resourceLoader from './utils/resource-loader.js';
+import Component from '../../component.js';
+import mergeOptions from '../../utils/merge-options.js';
+import { isCrossOrigin } from '../../utils/url.js';
+import resourceLoader from '../utils/resource-loader.js';
 import XHR from 'xhr';
 
 /**
@@ -31,9 +31,11 @@ class MediaAsyncLoader extends Component {
     // MediaLoader has no element
     const options_ = mergeOptions({createEl: false}, options);
     super(player, options_, ready);
+
+    let sources = options_.playerOptions.sources;
     //加载需要的播放模块
     //如果传入fileID 则异步执行super
-    console.log('MediaAsyncLoader', options_);
+    console.log('MediaAsyncLoader', options_, sources);
     // if(options_.fileID && options_.appID){
     //   xhr({
     //     method: "post",
@@ -59,4 +61,5 @@ class MediaAsyncLoader extends Component {
 }
 
 Component.registerComponent('MediaAsyncLoader', MediaAsyncLoader);
+
 export default MediaAsyncLoader;

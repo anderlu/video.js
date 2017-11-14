@@ -5,8 +5,11 @@
  */
 import videojs from '../video.js';
 //引入自定义模块
+import './components/async-loader.js';
+import './plugins/vid.js';
 import './plugins/dvr.js';
 import './plugins/quality-switcher.js';
+import './plugins/multi-resolution.js';
 import './tech/hlsjs.js';
 import './tech/flash/flash.js';
 import './tech/flash/flashls.js';
@@ -26,10 +29,14 @@ videojs.addLanguage('zh-CN', CN);
 function TcPlayer(id, options, ready) {
   // TODO
   var plugins = {
-
+    VID:''
   };
-  options.plugins = videojs.mergeOptions(options.plugins, plugins);
+  options.plugins = videojs.mergeOptions(plugins, options.plugins);
+  console.log(options.plugins);
   options.language = options.language || 'zh-CN';
+
+  // var Player = videojs.getComponent('Player');
+  // Player.prototype.options_.children[0] = '';
 
   const player = videojs(id, options, ready);
 

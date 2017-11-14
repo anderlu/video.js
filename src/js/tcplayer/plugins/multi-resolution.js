@@ -1,10 +1,10 @@
 import videojs from '../../video.js';
 
 const Plugin = videojs.getPlugin('plugin');
-class MultiResloution extends Plugin{
+class MultiResolution extends Plugin{
   /**
    *
-   * 用于支持传入多种分辨率，依赖 QualitySwitcher 做UI
+   * 用于支持传入多种分辨率，依赖 QualitySwitcher
    * {@link QualitySwitcher}
    *　
    * 通过sources参数传入数据时，检测sources item是否设置了label属性 例如label:720p，
@@ -14,8 +14,6 @@ class MultiResloution extends Plugin{
    */
   constructor(player, options) {
     super(player);
-
-
   }
   init() {
 
@@ -24,4 +22,7 @@ class MultiResloution extends Plugin{
 
   }
 }
-export default MultiResloution;
+
+videojs.registerPlugin('MultiResolution', MultiResolution);
+
+export default MultiResolution;
