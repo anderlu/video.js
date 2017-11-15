@@ -1071,11 +1071,13 @@ class Player extends Component {
   removeTechControlsListeners_() {
     // We don't want to just use `this.off()` because there might be other needed
     // listeners added by techs that extend this.
-    this.off(this.tech_, 'tap', this.handleTechTap_);
-    this.off(this.tech_, 'touchstart', this.handleTechTouchStart_);
-    this.off(this.tech_, 'touchmove', this.handleTechTouchMove_);
-    this.off(this.tech_, 'touchend', this.handleTechTouchEnd_);
-    this.off(this.tech_, 'mousedown', this.handleTechClick_);
+    if (this.tech_) {
+      this.off(this.tech_, 'tap', this.handleTechTap_);
+      this.off(this.tech_, 'touchstart', this.handleTechTouchStart_);
+      this.off(this.tech_, 'touchmove', this.handleTechTouchMove_);
+      this.off(this.tech_, 'touchend', this.handleTechTouchEnd_);
+      this.off(this.tech_, 'mousedown', this.handleTechClick_);
+    }
   }
 
   /**
@@ -1108,6 +1110,7 @@ class Player extends Component {
       } catch (e) {
         log('deleting tag.poster throws in some browsers', e);
       }
+      this.play();
     }
   }
 
@@ -2312,7 +2315,9 @@ class Player extends Component {
   src(source) {
     // getter usage
     if (typeof source === 'undefined') {
-      return this.cache_.src || '';
+      // master
+      // return this.cache_.src || '';
+      return this.cache_.src || this.techGet_('src');
     }
     // filter out invalid sources and turn our source into
     // an array of source objects

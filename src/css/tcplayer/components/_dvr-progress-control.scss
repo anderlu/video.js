@@ -1,0 +1,39 @@
+.vjs-dvr .tcp-dvr-progress-control .tcp-dvr-time-shift{
+  //@extend .vjs-play-progress;
+  background-color: transparent;
+}
+.vjs-dvr .vjs-progress-control {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.vjs-dvr .vjs-live-control {
+  flex: inherit;
+  cursor: pointer;
+}
+.vjs-dvr .vjs-live-control .vjs-tooltip {
+  line-height: 1em;
+}
+.vjs-dvr-live .vjs-live-control .vjs-tooltip {
+  display: none;
+}
+.vjs-dvr-live .vjs-live-control {
+  cursor: default;
+}
+.vjs-dvr .vjs-live-display{
+  margin:0 auto;
+}
+.vjs-live .vjs-live-display:before {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: .4em;
+  vertical-align: 4%;
+  background: #f51717;
+  content: '';
+  border-radius: 50%;
+}
+.vjs-dvr:not(.vjs-dvr-live) .vjs-live-display:before {
+  background: #566377;
+}

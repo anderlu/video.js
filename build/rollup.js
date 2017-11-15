@@ -140,7 +140,53 @@ const minifiedNovttUmd = Object.assign({}, _.cloneDeep(minifiedUmd), {
 
 minifiedNovttUmd.options.plugins.unshift(ignore(['videojs-vtt.js']));
 
-function runRollup({options, useStrict, format, dest, banner}) {
+const umdTcPlayer = {
+  options: {
+    entry: 'src/js/tcplayer/tcplayer.js',
+    plugins: [
+      primedResolve,
+      json(),
+      primedCjs,
+      primedBabel,
+      args.progress ? progress() : {},
+      filesize()
+    ],
+    legacy: true,
+    /* 避免打包外部lib */
+    external: ['hls.js'],
+    globals:{
+      'hls.js':'Hls'
+    }
+  },
+  banner: compiledLicense(Object.assign({includesVtt: true}, bannerData)),
+  useStrict: false,
+  format: 'umd',
+  moduleName: 'TcPlayer',
+  dest: 'dist/TcPlayer.js'
+};
+const minifiedUmdTcPlayer = Object.assign({}, _.cloneDeep(umdTcPlayer), {
+  dest: 'dist/TcPlayer.min.js'
+});
+
+minifiedUmdTcPlayer.options.plugins.splice(4, 0, uglify({
+  preserveComments: 'some',
+  screwIE8: false,
+  mangle: true,
+  compress: {
+    /* eslint-disable camelcase */
+    sequences: true,
+    dead_code: true,
+    conditionals: true,
+    booleans: true,
+    unused: true,
+    if_return: true,
+    join_vars: true,
+    drop_console: true
+    /* eslint-enable camelcase */
+  }
+}));
+
+function runRollup({options, useStrict, format, dest, banner, moduleName}) {
   rollup(options)
   .then(function(bundle) {
     bundle.write({
@@ -148,7 +194,7 @@ function runRollup({options, useStrict, format, dest, banner}) {
       format,
       dest,
       banner,
-      moduleName: 'videojs',
+      moduleName: moduleName || 'videojs',
       sourceMap: false
     });
   }, function(err) {
@@ -161,31 +207,37 @@ if (!args.watch) {
   if (args.minify) {
     runRollup(minifiedUmd);
     runRollup(minifiedNovttUmd);
+    runRollup(minifiedUmdTcPlayer);
   } else {
     runRollup(es);
     runRollup(cjs);
     runRollup(umd);
     runRollup(novttUmd);
+    runRollup(umdTcPlayer);
   }
 } else {
   const props = ['format', 'dest', 'banner', 'useStrict'];
   const watchers = [
-    ['es', watch({rollup},
-                 Object.assign({},
-                               es.options,
-                               _.pick(es, props)))],
-    ['cjs', watch({rollup},
-                  Object.assign({},
-                                cjs.options,
-                                _.pick(cjs, props)))],
-    ['umd', watch({rollup},
-                  Object.assign({moduleName: 'videojs'},
-                                umd.options,
-                                _.pick(umd, props)))],
-    ['novtt', watch({rollup},
-                    Object.assign({moduleName: 'videojs'},
-                                  novttUmd.options,
-                                  _.pick(novttUmd, props)))]
+    // ['es', watch({rollup},
+    //              Object.assign({},
+    //                            es.options,
+    //                            _.pick(es, props)))],
+    // ['cjs', watch({rollup},
+    //               Object.assign({},
+    //                             cjs.options,
+    //                             _.pick(cjs, props)))],
+    // ['umd', watch({rollup},
+    //               Object.assign({moduleName: 'videojs'},
+    //                             umd.options,
+    //                             _.pick(umd, props)))],
+    // ['novtt', watch({rollup},
+    //                 Object.assign({moduleName: 'videojs'},
+    //                               novttUmd.options,
+    //                               _.pick(novttUmd, props)))],
+    ['umdTcPlayer', watch({rollup},
+                  Object.assign({moduleName: 'TcPlayer'},
+                    umdTcPlayer.options,
+                    _.pick(umdTcPlayer, props)))]
   ];
 
   watchers.forEach(function([type, watcher]) {

@@ -12,15 +12,18 @@
  */
 const checkVolumeSupport = function(self, player) {
   // hide volume controls when they're not supported by the current tech
-  if (player.tech_ && !player.tech_.featuresVolumeControl) {
+  if (player.tech_ && !player.tech_.featuresVolumeControl && !player.tech_.featuresMuteControl) {
     self.addClass('vjs-hidden');
+  } else if (player.tech_ && player.tech_.featuresVolumeControl) {
+    self.addClass('enable-volume-control');
   }
 
   self.on(player, 'loadstart', function() {
-    if (!player.tech_.featuresVolumeControl) {
+    if (!player.tech_.featuresVolumeControl && !player.tech_.featuresMuteControl) {
       self.addClass('vjs-hidden');
-    } else {
+    } else if (player.tech_.featuresVolumeControl) {
       self.removeClass('vjs-hidden');
+      self.addClass('enable-volume-control');
     }
   });
 };

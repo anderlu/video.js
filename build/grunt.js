@@ -122,7 +122,8 @@ module.exports = function(grunt) {
       build: {
         files: {
           'build/temp/alt/video.novtt.min.js': 'build/temp/alt/video.novtt.js',
-          'build/temp/video.min.js': 'build/temp/video.js'
+          'build/temp/video.min.js': 'build/temp/video.js',
+          'build/temp/TcPlayer.min.js': 'build/temp/TcPlayer.js'
         }
       }
     },
@@ -131,14 +132,16 @@ module.exports = function(grunt) {
       dist: {
         files: [
           'build/temp/video.js',
+          'build/temp/TcPlayer.js',
           'build/temp/alt/video.novtt.js',
           'build/temp/video-js.css',
+          'build/temp/TcPlayer.css',
           'build/temp/alt/video-js-cdn.css'
         ],
         tasks: ['copy:dist']
       },
       minify: {
-        files: ['build/temp/video.js'],
+        files: ['build/temp/video.js', 'build/temp/TcPlayer.js'],
         tasks: ['uglify']
       },
       skin: {
@@ -181,7 +184,7 @@ module.exports = function(grunt) {
       minify: {
         expand: true,
         cwd: 'build/temp/',
-        src: ['video-js.css', 'alt/video-js-cdn.css'],
+        src: ['video-js.css', 'alt/video-js-cdn.css', 'TcPlayer.css'],
         dest: 'build/temp/',
         ext: '.min.css'
       }
@@ -190,6 +193,7 @@ module.exports = function(grunt) {
       build: {
         files: {
           'build/temp/video-js.css': 'src/css/vjs.scss',
+          'build/temp/TcPlayer.css': 'src/css/tcplayer.scss',
           'build/temp/alt/video-js-cdn.css': 'src/css/vjs-cdn.scss'
         }
       }
@@ -325,7 +329,8 @@ module.exports = function(grunt) {
       build: {
         options: browserifyGruntOptions(),
         files: {
-          'build/temp/video.js': ['es5/video.js']
+          'build/temp/video.js': ['es5/video.js'],
+          'build/temp/TcPlayer.js': ['es5/TcPlayer.js']
         }
       },
       buildnovtt: {
@@ -342,7 +347,8 @@ module.exports = function(grunt) {
           keepAlive: true,
         }),
         files: {
-          'build/temp/video.js': ['es5/video.js']
+          'build/temp/video.js': ['es5/video.js'],
+          'build/temp/TcPlayer.js': ['es5/TcPlayer.js']
         }
       },
       watchnovtt: {
@@ -396,6 +402,10 @@ module.exports = function(grunt) {
       ie8_addition: {
         src: ['build/temp/video-js.css', 'src/css/ie8.css'],
         dest: 'build/temp/video-js.css'
+      },
+      ie8_addition_tcplayer: {
+        src: ['build/temp/TcPlayer.css', 'src/css/ie8.css'],
+        dest: 'build/temp/TcPlayer.css'
       }
     },
     concurrent: {
@@ -523,7 +533,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-accessibility');
 
   grunt.registerTask('build', [
-    'shell:lint',
+    // 'shell:lint',
     'clean:build',
 
     'shell:rollupall',
@@ -546,7 +556,7 @@ module.exports = function(grunt) {
     'zip:dist'
   ]);
 
-  grunt.registerTask('skin', ['sass', 'concat:ie8_addition']);
+  grunt.registerTask('skin', ['sass', 'concat:ie8_addition', 'concat:ie8_addition_tcplayer']);
 
   // Default task - build and test
   grunt.registerTask('default', ['test']);

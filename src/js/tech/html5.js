@@ -870,6 +870,26 @@ Html5.canControlVolume = function() {
 };
 
 /**
+ * Check if the mute can be changed in this browser/device.
+ * Volume can be changed in a lot of mobile devices.
+ *
+ * @return {boolean}
+ *         - True if mute can be controlled
+ *         - False otherwise
+ */
+Html5.canControlMute = function() {
+  // IE will error if Windows Media Player not installed #3315
+  try {
+    const muted = Html5.TEST_VID.muted;
+
+    Html5.TEST_VID.muted = true;
+    return muted !== Html5.TEST_VID.muted;
+  } catch (e) {
+    return false;
+  }
+};
+
+/**
  * Check if the playback rate can be changed in this browser/device.
  *
  * @return {boolean}
@@ -965,6 +985,14 @@ Html5.Events = [
  * @default {@link Html5.canControlVolume}
  */
 Html5.prototype.featuresVolumeControl = Html5.canControlVolume();
+
+/**
+ * Boolean indicating whether the `Tech` supports mute control.
+ *
+ * @type {boolean}
+ * @default {@link Html5.canControlVolume}
+ */
+Html5.prototype.featuresMuteControl = Html5.canControlMute();
 
 /**
  * Boolean indicating whether the `Tech` supports changing the speed at which the media
