@@ -7,7 +7,7 @@ import log from '../../utils/log.js';
 import { isCrossOrigin } from '../../utils/url.js';
 // import resourceLoader from '../utils/resource-loader.js';
 import XHR from 'xhr';
-import jsonp from 'jsonp';
+import jsonp from '../utils/jsonp.js';
 
 /**
  * MediaAsyncLoader 会检测当前播放环境，分析传入的视频格式，异步加载需要的播放组件例如 hls.js、flv.js 等，用于替代loader.js的逻辑
