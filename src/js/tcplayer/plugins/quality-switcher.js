@@ -29,13 +29,13 @@ class QualitySwitcher extends Plugin{
     let self = this,
         tech = this.player.tech(true);
     this.init = videojs.bind(this,this.init);
-    console.log('new QualitySwitcher',player, this, options);
+    // console.log('new QualitySwitcher',player, this, options);
     //注册事件，当触发load quality data时进行初始化
     if(tech){
       tech.on('loadedqualitydata', this.init);
     }else{
       player.ready(function(){
-        console.log('QualitySwitcher on ready', options);
+        // console.log('QualitySwitcher on ready', options);
         tech = self.player.tech(true);
         tech.on('loadedqualitydata', self.init);
       });

@@ -12,21 +12,18 @@ class VID extends Plugin{
   constructor(player, options) {
     super(player);
     console.log('new VID', this, options);
-    let sources = player.options_.sources;
-    if(sources.length > 0){
-      for(let i = 0; i < sources.length; i++){
-        if(sources[i].appID && sources[i].fileID){
-          player.options_.children[0] = 'MediaAsyncLoader';
-        }
-      }
-
+    this.init(this.player.options_);
+  }
+  init(playerOptions) {
+    let sources = playerOptions.sources;
+    if(playerOptions && playerOptions.appID && playerOptions.fileID){
+      // vid mode switch async loader
+      playerOptions.children[0] = 'MediaAsyncLoader';
+    }else if(sources.length>0){
+      // url mode
+    }else{
+      console.warn('no video fileID or source');
     }
-  }
-  init() {
-
-  }
-  switchResloution(id){
-
   }
 }
 

@@ -37,10 +37,8 @@ var beforeSetup = function(videoEl, options) {
 TcPlayer.hook('beforesetup', beforeSetup);
 
     var player = TcPlayer('player1',{
-      sources: [{
-        fileID: '14651978969267306533',
-        appID: '1251763412'
-      }],
+      fileID: '14651978969267306533',
+      appID: '1251763412',
       playbackRates: [0.5, 1, 1.5, 2],
       plugins:{
         MultiResolution:{
