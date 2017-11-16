@@ -66,7 +66,6 @@ function jsonp(url, opts, fn){
   }
 
   window[id] = function(data){
-    debug('jsonp got', data);
     cleanup();
     if (fn) fn(null, data);
   };
@@ -74,8 +73,6 @@ function jsonp(url, opts, fn){
   // add qs component
   url += (~url.indexOf('?') ? '&' : '?') + param + '=' + enc(id);
   url = url.replace('?&', '?');
-
-  debug('jsonp req "%s"', url);
 
   // create script
   script = document.createElement('script');
