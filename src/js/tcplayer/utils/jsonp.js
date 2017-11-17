@@ -1,3 +1,5 @@
+import QueryString from 'query-string';
+
 /**
  * Callback index.
  */
@@ -14,7 +16,8 @@ function noop(){}
  * JSONP handler
  *
  * Options:
- *  - param {String} qs parameter (`callback`)
+ *  - param {Object}
+ *  - funcKey {String} default 'callback'
  *  - prefix {String} qs parameter (`__jp`)
  *  - name {String} qs parameter (`prefix` + incr)
  *  - timeout {Number} how long after a timeout error is emitted (`60000`)
@@ -36,8 +39,13 @@ function jsonp(url, opts, fn){
   // use the callback name that was passed if one was provided.
   // otherwise generate a unique name by incrementing our counter.
   var id = opts.name || (prefix + (count++));
-
-  var param = opts.param || 'callback';
+  var funcKey = opts.funcKey || 'callback';
+  var param;
+  if(typeof opts.param == 'object'){
+    param = QueryString.stringify(opts.param);
+  } else{
+    param = opts.param;
+  }
   var timeout = null != opts.timeout ? opts.timeout : 60000;
   var enc = encodeURIComponent;
   var target = document.getElementsByTagName('script')[0] || document.head;
@@ -71,7 +79,7 @@ function jsonp(url, opts, fn){
   };
 
   // add qs component
-  url += (~url.indexOf('?') ? '&' : '?') + param + '=' + enc(id);
+  url += (~url.indexOf('?') ? '&' : '?') + param + '&' + funcKey + '=' + enc(id);
   url = url.replace('?&', '?');
 
   // create script

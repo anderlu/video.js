@@ -38,44 +38,41 @@ TcPlayer.hook('beforesetup', beforeSetup);
 
     var player = TcPlayer('player1',{
 //      poster:'//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg',
-      sources: [{
-//        src: '//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8',
-//        src: '//1253131631.vod2.myqcloud.com/db1acaa1vodtransgzp1253131631/63c80a0e9031868223386159708/master_playlist.m3u8',
-        src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-//        src: '//playtimeshift.live.myqcloud.com/6000/6000_rlGiWMaK86U/timeshift.m3u8?delay=0&appid=3',
+//      sources: [{
 //        src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-//        src: '//4230.liveplay.myqcloud.com/live/4230_201708101049450061312437_1.m3u8',
-        type: 'application/x-mpegURL',
-      }, {
-        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
-        type: 'video/mp4',
-      }],
-      multiResSources:{
-        'sd':[
-          {
-            src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f220.m3u8',
-            type: 'application/x-mpegURL',
-          },
-          {
-            src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f20.mp4',
-            type: 'video/mp4',
-          }
-        ],
-        'hd':[
-          {
-            src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f240.m3u8',
-            type: 'application/x-mpegURL',
-          },
-          {
-            src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
-            type: 'video/mp4',
-          }
-        ]
-      },
-      multiResLabels:{
-        'sd':'标清','hd':'高清'
-      },
-      multiResDefault:'sd',
+//        type: 'application/x-mpegURL',
+//      }, {
+//        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
+//        type: 'video/mp4',
+//      }],
+      multiResolution: {
+        sources:{
+          'sd':[
+            {
+              src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f220.m3u8',
+              type: 'application/x-mpegURL',
+            },
+            {
+              src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f20.mp4',
+              type: 'video/mp4',
+            }
+          ],
+          'hd':[
+            {
+              src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f240.m3u8',
+              type: 'application/x-mpegURL',
+            },
+            {
+              src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
+              type: 'video/mp4',
+            }
+          ]
+        },
+        labels:{
+          'sd':'标清','hd':'高清'
+        },
+        defaultRes: 'sd'
+        },
       plugins:{
         MultiResolution:{
           defaultRes:'720P'

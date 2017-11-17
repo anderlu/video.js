@@ -6,20 +6,33 @@ class MultiResolution extends Plugin{
    *
    * 用于支持传入多种分辨率，依赖 QualitySwitcher
    * {@link QualitySwitcher}
-   *　
-   * 通过sources参数传入数据时，检测sources item是否设置了label属性 例如label:720p，
-   * 如果设置了label则初始化 MutipleResloution 插件
-   * 1. 给sources item 分配id，可直接用数组索引作为id
-   * 2.
+   *
    */
   constructor(player, options) {
     super(player);
+    console.log('MultiResolution new', player, options);
+    player.on('multiresolutionchange', videojs.bind(this, this.init));
+    this.init();
   }
-  init() {
+  init(event) {
+    let player = this.player,
+        options = this.player.options_.multiResolution,
+        multiResSources = options && options.sources;
+    console.log('MultiResolution', multiResSources,player.options_.playerOptions);
+    if(multiResSources){
+      if(options.defaultRes){
+        player.options_.sources.push(...multiResSources[options.defaultRes]);
+        // multiResSources[options.defaultRes].forEach(function(source) {
+        //   player.options_.sources.push(source);
+        // });
+      }
+    }
+    player.ready(videojs.bind(this, function () {
 
+    }));
   }
   switchResloution(id){
-
+    this.player.src();
   }
 }
 
