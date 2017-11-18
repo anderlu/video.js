@@ -53,6 +53,46 @@ QUnit.test('should return a video player instance', function(assert) {
   player2.dispose();
 });
 
+QUnit.test('should log if the supplied element is not included in the DOM',
+function(assert) {
+  const origWarnLog = log.warn;
+  const fixture = document.getElementById('qunit-fixture');
+  const warnLogs = [];
+
+  log.warn = (args) => {
+    warnLogs.push(args);
+  };
+
+  const vid = document.createElement('video');
+
+  vid.id = 'test_vid_id';
+  fixture.appendChild(vid);
+  const player = videojs(vid);
+
+  assert.ok(player, 'created player from tag');
+  assert.equal(warnLogs.length, 0, 'no warn logs');
+
+  const vid2 = document.createElement('video');
+
+  vid2.id = 'test_vid_id2';
+  const player2 = videojs(vid2);
+
+  assert.ok(player2, 'created player from tag');
+  assert.equal(warnLogs.length, 1, 'logged a warning');
+  assert.equal(warnLogs[0],
+               'The element supplied is not included in the DOM',
+               'logged the right message');
+
+  // should only log warnings on the first creation
+  videojs(vid2);
+  videojs('test_vid_id2');
+  assert.equal(warnLogs.length, 1, 'did not log another warning');
+
+  log.warn = origWarnLog;
+  player.dispose();
+  player2.dispose();
+});
+
 QUnit.test('should log about already initalized players if options already passed',
 function(assert) {
   const origWarnLog = log.warn;
@@ -330,4 +370,156 @@ QUnit.test('should create a new tag for movingMediaElementInDOM', function(asser
   Html5.prototype.movingMediaElementInDOM = oldMoving;
   Html5.isSupported = oldIS;
   Html5.nativeSourceHandler.canPlayType = oldCPT;
+});
+
+/* **************************************************** *
+ * div embed tests copied from video emebed tests above *
+ * **************************************************** */
+QUnit.module('video.js video-js embed', {
+  beforeEach() {
+    this.clock = sinon.useFakeTimers();
+  },
+  afterEach() {
+    this.clock.restore();
+  }
+});
+QUnit.test('should return a video player instance', function(assert) {
+  const fixture = document.getElementById('qunit-fixture');
+
+  fixture.innerHTML += '<video-js id="test_vid_id"></video-js>' +
+                       '<video-js id="test_vid_id2"></video-js>';
+
+  const player = videojs('test_vid_id', { techOrder: ['techFaker'] });
+
+  assert.ok(player, 'created player from tag');
+  assert.ok(player.id() === 'test_vid_id');
+  assert.ok(videojs.getPlayers().test_vid_id === player,
+           'added player to global reference');
+
+  const playerAgain = videojs('test_vid_id');
+
+  assert.ok(player === playerAgain, 'did not create a second player from same tag');
+
+  assert.equal(player, playerAgain, 'we did not make a new player');
+
+  const tag2 = document.getElementById('test_vid_id2');
+  const player2 = videojs(tag2, { techOrder: ['techFaker'] });
+
+  assert.ok(player2.id() === 'test_vid_id2', 'created player from element');
+
+  player.dispose();
+  player2.dispose();
+});
+
+QUnit.test('should log about already initalized players if options already passed',
+function(assert) {
+  const origWarnLog = log.warn;
+  const fixture = document.getElementById('qunit-fixture');
+  const warnLogs = [];
+
+  log.warn = (args) => {
+    warnLogs.push(args);
+  };
+
+  fixture.innerHTML += '<video-js id="test_vid_id"></video-js>';
+
+  const player = videojs('test_vid_id', { techOrder: ['techFaker'] });
+
+  assert.ok(player, 'created player from tag');
+  assert.equal(player.id(), 'test_vid_id', 'player has the right ID');
+  assert.equal(warnLogs.length, 0, 'no warn logs');
+
+  const playerAgain = videojs('test_vid_id');
+
+  assert.equal(player, playerAgain, 'did not create a second player from same tag');
+  assert.equal(warnLogs.length, 0, 'no warn logs');
+
+  const playerAgainWithOptions = videojs('test_vid_id', { techOrder: ['techFaker'] });
+
+  assert.equal(player,
+               playerAgainWithOptions,
+               'did not create a second player from same tag');
+  assert.equal(warnLogs.length, 1, 'logged a warning');
+  assert.equal(warnLogs[0],
+               'Player "test_vid_id" is already initialised. Options will not be applied.',
+               'logged the right message');
+
+  log.warn = origWarnLog;
+
+  player.dispose();
+});
+
+QUnit.test('should return a video player instance from el html5 tech', function(assert) {
+  const fixture = document.getElementById('qunit-fixture');
+
+  fixture.innerHTML += '<video-js id="test_vid_id"></video-js>' +
+                       '<video-js id="test_vid_id2"></video-js>';
+
+  const vid = document.querySelector('#test_vid_id');
+
+  const player = videojs(vid);
+
+  assert.ok(player, 'created player from tag');
+  assert.ok(player.id() === 'test_vid_id');
+  assert.ok(videojs.getPlayers().test_vid_id === player,
+           'added player to global reference');
+
+  const playerAgain = videojs(vid);
+
+  assert.ok(player === playerAgain, 'did not create a second player from same tag');
+  assert.equal(player, playerAgain, 'we did not make a new player');
+
+  const tag2 = document.getElementById('test_vid_id2');
+  const player2 = videojs(tag2, { techOrder: ['techFaker'] });
+
+  assert.ok(player2.id() === 'test_vid_id2', 'created player from element');
+
+  player.dispose();
+  player2.dispose();
+});
+
+QUnit.test('should return a video player instance from el techfaker', function(assert) {
+  const fixture = document.getElementById('qunit-fixture');
+
+  fixture.innerHTML += '<video-js id="test_vid_id"></video-js>' +
+                       '<video-js id="test_vid_id2"></video-js>';
+
+  const vid = document.querySelector('#test_vid_id');
+  const player = videojs(vid, {techOrder: ['techFaker']});
+
+  assert.ok(player, 'created player from tag');
+  assert.ok(player.id() === 'test_vid_id');
+  assert.ok(videojs.getPlayers().test_vid_id === player,
+           'added player to global reference');
+
+  const playerAgain = videojs(vid);
+
+  assert.ok(player === playerAgain, 'did not create a second player from same tag');
+  assert.equal(player, playerAgain, 'we did not make a new player');
+
+  const tag2 = document.getElementById('test_vid_id2');
+  const player2 = videojs(tag2, { techOrder: ['techFaker'] });
+
+  assert.ok(player2.id() === 'test_vid_id2', 'created player from element');
+
+  player.dispose();
+  player2.dispose();
+});
+
+QUnit.test('adds video-js class name with the video-js embed', function(assert) {
+  const fixture = document.getElementById('qunit-fixture');
+
+  fixture.innerHTML += '<video-js id="test_vid_id"></video-js>' +
+                       '<video-js class="video-js" id="test_vid_id2"></video-js>';
+
+  const vid = document.querySelector('#test_vid_id');
+  const player = videojs(vid, {techOrder: ['techFaker']});
+  const tag2 = document.getElementById('test_vid_id2');
+  const player2 = videojs(tag2, { techOrder: ['techFaker'] });
+
+  assert.ok(player.hasClass('video-js'), 'video-js class was added to the first embed');
+  assert.ok(player2.hasClass('video-js'), 'video-js class was preserved to the second embed');
+
+  player.dispose();
+  player2.dispose();
 });
