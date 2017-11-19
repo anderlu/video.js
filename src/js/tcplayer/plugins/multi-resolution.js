@@ -11,7 +11,9 @@ class MultiResolution extends Plugin{
   constructor(player, options) {
     super(player);
     console.log('MultiResolution new', player, options);
+
     player.on('multiresolutionchange', videojs.bind(this, this.init));
+
     this.init();
   }
   init(event) {
@@ -21,6 +23,7 @@ class MultiResolution extends Plugin{
     console.log('MultiResolution', multiResSources,player.options_.playerOptions);
     if(multiResSources){
       if(options.defaultRes){
+        //设置原始的sources，在medialoader初始化时使用
         player.options_.sources.push(...multiResSources[options.defaultRes]);
         // multiResSources[options.defaultRes].forEach(function(source) {
         //   player.options_.sources.push(source);
@@ -33,6 +36,16 @@ class MultiResolution extends Plugin{
   }
   switchResloution(id){
     this.player.src();
+  }
+
+  /**
+   * 初始化切换器需要的数据
+   * @returns {Array}
+   */
+  initQualityData(multiResSources){
+      let qualityData;
+      
+      return qualityData;
   }
 }
 
