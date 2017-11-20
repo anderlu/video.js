@@ -19,14 +19,14 @@ class QualitySwitcherMenuButton extends MenuButton {
   }
   createMenu(){
     let qualityList = this.options_.qualityList,
-        menu = new QualitySwitcherMenu(this.player(), this.options_),
+        menu = new QualitySwitcherMenu(this.player(), { 'name': this.options_.trackType + 'QualitySwitcherMenu' }),
         options;
     //创建item
     // console.log('createMenu QualitySwitcherMenuButton',this.options_);
-    for(let i=0; i < qualityList.length; i++){
+    for(let i=qualityList.length-1; i > -1 ; i--){
       let qualityItem = qualityList[i];
       options = videojs.mergeOptions(qualityItem, {
-        'name': qualityItem.label,
+        // 'name': qualityItem.label,
         'trackType': this.options_.trackType,
         'callback': this.options_.callback,
         'selectable': true

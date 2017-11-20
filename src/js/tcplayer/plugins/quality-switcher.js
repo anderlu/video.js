@@ -29,7 +29,7 @@ class QualitySwitcher extends Plugin{
     let self = this,
         tech = this.player.tech(true);
     this.init = videojs.bind(this,this.init);
-    // console.log('new QualitySwitcher',player, this, options);
+    // console.log('new QualitySwitcher',tech);
     //注册事件，当触发load quality data时进行初始化
     if(tech){
       tech.on('loadedqualitydata', this.init);
@@ -75,12 +75,12 @@ class QualitySwitcher extends Plugin{
           name = track + 'QualitySwitcherMenuButton',
           qualitySwitcherMenuButton = player.controlBar.getChild(name);
 
-      if (qualitySwitcherMenuButton) {
-        qualitySwitcherMenuButton.dispose();
-        player.controlBar.removeChild(qualitySwitcherMenuButton);
-      }
-
       if (qualityData[track] && qualityData[track].length > 1) {
+        if (qualitySwitcherMenuButton) {
+          qualitySwitcherMenuButton.dispose();
+          player.controlBar.removeChild(qualitySwitcherMenuButton);
+        }
+
         qualitySwitcherMenuButton = new QualitySwitcherMenuButton(player, {name, qualityList: qualityData[track], callback: callbacks[track], trackType: track});
         qualitySwitcherMenuButton.addClass(TRACK_CLASS[track]);
         player.controlBar.addChild(qualitySwitcherMenuButton,{}, 10);

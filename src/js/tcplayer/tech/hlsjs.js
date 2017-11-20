@@ -30,10 +30,10 @@ class Html5HlsJS{
     hls.attachMedia(video);
     hls.loadSource(source.src);
   }
-  switchQuality(qualityId){
-    console.log(qualityId,this.hls.currentLevel, this.hls.nextLevel, this.hls);
-    if(qualityId != this.hls.currentLevel){
-      this.hls.nextLevel = qualityId;
+  switchQuality(data){
+    // console.log(data, this.hls);
+    if(data.id != this.hls.currentLevel){
+      this.hls.nextLevel = data.id;
     }
   }
   dispose(){
@@ -74,7 +74,7 @@ class Html5HlsJS{
     });
 
     var payload = {
-      qualityData: {video: cleanTracklist.reverse()},
+      qualityData: {video: cleanTracklist},
       callbacks: {video: videojs.bind(this, this.switchQuality)}
     };
     // console.log('hlsjs onMetaData', payload);
