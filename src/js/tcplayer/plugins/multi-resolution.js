@@ -70,17 +70,22 @@ class MultiResolution extends Plugin{
     let event = 'loadedmetadata';
     player.one(event, function () {
       player.currentTime(currentTime);
-      if(!isPaused){
-        player.play();
+      let promise = player.play();
+      if(promise){
+        promise.then(function () {
+          if(isPaused){
+            player.pause();
+          }
+        });
       }
-      player.bigPlayButton && player.bigPlayButton.show();
-      player.posterImage && player.posterImage.show();
+      //   player.bigPlayButton && player.bigPlayButton.show();
+      //   player.posterImage && player.posterImage.show();
       // player.handleTechSeeked_();
     });
-    if(!isPaused){
-      player.bigPlayButton && player.bigPlayButton.hide();
-      player.posterImage && player.posterImage.hide();
-    }
+    // if(!isPaused){
+    player.bigPlayButton && player.bigPlayButton.hide();
+    player.posterImage && player.posterImage.hide();
+    // }
     player.src(this.options.sources[data.id]);
   }
 

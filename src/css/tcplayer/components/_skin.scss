@@ -61,7 +61,64 @@
     opacity: 0;
     transition: opacity 250ms ease;
   }
+
+
+  .vjs-control-bar{
+    background-color: rgba(0, 0, 0, 0.3);
+    @include linear-gradient(to top,
+      rgba(0, 0, 0, 0.666) 0%,
+      rgba(0, 0, 0, 0.492) 19%,
+      rgba(0, 0, 0, 0.360) 34%,
+      rgba(0, 0, 0, 0.254) 47%,
+      rgba(0, 0, 0, 0.185) 56.5%,
+      rgba(0, 0, 0, 0.129) 65%,
+      rgba(0, 0, 0, 0.084) 73%,
+      rgba(0, 0, 0, 0.050) 80.2%,
+      rgba(0, 0, 0, 0.028) 86.1%,
+      rgba(0, 0, 0, 0.014) 91%,
+      rgba(0, 0, 0, 0.005) 95.2%,
+      rgba(0, 0, 0, 0.001) 98.2%,
+      rgba(0, 0, 0, 0) 100%);
+  }
+  .vjs-time-control{
+    padding-left: 0em;
+    padding-right: 0em;
+  }
+  .vjs-current-time,
+  .vjs-time-divider,
+  .vjs-duration{
+    display: block;
+  }
+  .vjs-time-divider{
+    min-width:0;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+  }
+  .vjs-current-time{
+    padding-left: 1em;
+  }
+  .vjs-duration{
+    padding-right: 1em;
+  }
+
+  .vjs-remaining-time{
+    display: none;
+  }
+  .vjs-progress-control{
+    position: absolute;
+    width: 100%;
+    top: -0.9em;
+    height: 1.5em;
+  }
+  .vjs-play-progress{
+    background-color: #00a4ff;
+  }
+  .vjs-custom-control-spacer{
+    display: block;
+    flex-grow: 1;
+  }
 }
+
 
 .vjs-button > .vjs-icon-placeholder:before {
   //移动端的 单位line-height比PC端要高， 设置为2时pc端垂直居中，设置为1.67时移动端垂直居中
