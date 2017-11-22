@@ -86,6 +86,8 @@ class MediaAsyncLoader extends Component {
           label: '480p'
         }
       ]);
+
+      // trigger multiresolutionchange
     } else {
       //error timeout
       log.error(error);

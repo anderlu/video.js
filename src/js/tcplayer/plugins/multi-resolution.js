@@ -25,28 +25,37 @@ class MultiResolution extends Plugin{
     super(player);
     // console.log('MultiResolution new', player, options);
     this.options = options;
-    player.on('multiresolutionchange', videojs.bind(this, this.init));
-    this.init();
+    this.hasInit = false;
+    player.on('multiresolutionchange', videojs.bind(this, function (event) {
+      if(event.data){
+        this.update(data);
+      }
+    }));
+    //
+    this.init(this.player.options_.multiResolution);
   }
 
   /**
-   *
-   * @param event
-   * event.data = {Object} multiResolution
+   * 初始化数据
+   * @param data
+   * data = {Object} multiResolution
    */
-  init(event) {
+  init(data) {
     let player = this.player,
-        options = videojs.mergeOptions(defaultOptions, this.options, this.player.options_.multiResolution),
+        options = videojs.mergeOptions(defaultOptions, this.options, data),
         multiResSources = options && options.sources;
     this.options = options;
     console.log('MultiResolution', this);
     if(multiResSources){
       if(options.defaultRes){
-        //设置原始的sources，在medialoader初始化时使用
-        player.options_.sources.push(...multiResSources[options.defaultRes]);
-        // multiResSources[options.defaultRes].forEach(function(source) {
-        //   player.options_.sources.push(source);
-        // });
+        this.currentID = options.defaultRes;
+        if(!this.hasInit){
+          this.hasInit = true;
+          //设置原始的sources，在medialoader初始化时使用
+          player.options_.sources.push(...multiResSources[options.defaultRes]);
+        }else{
+          player.src(multiResSources[options.defaultRes]);
+        }
       }
       player.ready(videojs.bind(this, function () {
         let tech = this.player.tech(true);
@@ -61,7 +70,28 @@ class MultiResolution extends Plugin{
       }));
     }
   }
+
+  /**
+   * 更新多分辨率数据
+   * @param data
+   * data = {Object} multiResolution
+   */
+  update(data){
+    this.init(data);
+  }
+  /**
+   * quality switcher 的回调函数，参数为选中的item options
+   * @param data
+   *  ｛
+   *    'id': {String}
+   *    'label': {String}
+   *    'selected': {Boolean}
+   *  ｝
+   */
   switchResolution(data){
+    if(this.currentID == data.id){
+      return ;
+    }
     let player = this.player;
     let currentTime = player.currentTime();
     let isPaused = player.paused();

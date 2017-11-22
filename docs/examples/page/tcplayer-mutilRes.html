@@ -12,6 +12,10 @@
 
   <!--<script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>-->
   <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+    }
     .video-js{
       margin:0 auto;
     }
@@ -48,20 +52,20 @@ TcPlayer.hook('beforesetup', beforeSetup);
       multiResolution: {
         sources:{
           'sd':[
-            {
-              src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f220.m3u8',
-              type: 'application/x-mpegURL'
-            },
+//            {
+//              src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f220.m3u8',
+//              type: 'application/x-mpegURL'
+//            },
             {
               src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f20.mp4',
               type: 'video/mp4'
             }
           ],
           'hd':[
-            {
-              src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f240.m3u8',
-              type: 'application/x-mpegURL'
-            },
+//            {
+//              src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f240.m3u8',
+//              type: 'application/x-mpegURL'
+//            },
             {
               src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
               type: 'video/mp4'
@@ -105,17 +109,8 @@ TcPlayer.hook('beforesetup', beforeSetup);
         featuresPlaybackRate: false
       }
     });
-//    player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
-    //加上接口依赖后，不能使用以下方法注册事件，需要在new TcPlayer的时候传递事件回调
     player.ready(function() {
       console.log('player cb ready');
-//      player.play();
-      player.tech_.on('loadedqualitydata', function (event) {
-//        console.log('loadedqualitydata', event);
-      });
-      player.tech_.on('hlsLevelLoaded', function (event) {
-//        console.log('hlsLevelLoaded', event);
-      });
     });
 
     player.on('ready', function() {
