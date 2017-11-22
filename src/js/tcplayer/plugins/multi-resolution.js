@@ -112,10 +112,9 @@ class MultiResolution extends Plugin{
       //   player.posterImage && player.posterImage.show();
       // player.handleTechSeeked_();
     });
-    // if(!isPaused){
     player.bigPlayButton && player.bigPlayButton.hide();
     player.posterImage && player.posterImage.hide();
-    // }
+    this.currentID = data.id;
     player.src(this.options.sources[data.id]);
   }
 

@@ -75,6 +75,15 @@ class MediaAsyncLoader extends Component {
       player.poster(result.data.file_info.image_url);
       // player.poster(result.playerInfo.coverInfo.coverUrl);
       // player.src(this.parserCgiData(result));
+
+
+      // user master playlist
+
+      // use multi resolution sources
+
+      // player.updateMultiResolution(multiResolution);
+
+      //
       player.src([
         {
           src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
@@ -100,8 +109,20 @@ class MediaAsyncLoader extends Component {
    *    HLS master playlist，包含所有的hls media playlist
    *  - transcodeList {Array}
    *    转码后的视频数据，可能是mp4、hls media playlist、flv[待定]
-   * @returns {Array}
-   *
+   * @returns {Array|Object}
+   *  - Array
+   *    [{
+   *      'src': ''
+   *      'type': ''
+   *    }]
+   *  - Object
+   *    multiResolution:
+   *    {
+   *      'sources': {'sd':[{Object}]}
+   *      'labels': {'sd':'标清','hd':'高清'},
+   *      'showOrder': ['sd','hd'],
+   *      'defaultRes': 'sd'
+   *    }
    */
   parserCgiData(playerInfo){
     let masterPlaylist = playerInfo.videoInfo.masterPlaylist,
@@ -113,8 +134,11 @@ class MediaAsyncLoader extends Component {
         'src' : masterPlaylist.url,
         'type' : Constant.EXT_MIME['m3u8']
       });
+      return sources;
     }else{
-      //
+      //构造多分辨率数据
+      let multiResolution = {};
+
       for(let i=0; i < transcodeList.length; i++){
         let source = {
           'src' : transcodeList[i].url,
@@ -125,7 +149,6 @@ class MediaAsyncLoader extends Component {
         sources.push(source);
       }
     }
-    return sources;
   }
 
   /**
