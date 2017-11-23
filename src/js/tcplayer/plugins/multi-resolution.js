@@ -42,29 +42,30 @@ class MultiResolution extends Plugin{
    */
   init(data) {
     let player = this.player,
-        options = videojs.mergeOptions(defaultOptions, this.options, data),
-        multiResSources = options && options.sources;
+      options = videojs.mergeOptions(defaultOptions, this.options, data),
+      multiResSources = options && options.sources;
     this.options = options;
     console.log('MultiResolution', this);
-    if(multiResSources){
-      if(options.defaultRes){
-        this.currentID = options.defaultRes;
-        if(!this.hasInit){
-          this.hasInit = true;
-          //设置原始的sources，在medialoader初始化时使用
-          player.options_.sources.push(...multiResSources[options.defaultRes]);
-        }else{
-          player.src(multiResSources[options.defaultRes]);
-        }
+    if (multiResSources) {
+      this.currentID = options.defaultRes = options.defaultRes || Object.keys(multiResSources)[0];
+      if(player.options_.children[0] == 'MediaLoader'){
+        //设置原始的sources，在medialoader初始化时使用
+        player.options_.sources.push(...multiResSources[this.currentID]);
+      }else{
+        player.src(multiResSources[this.currentID]);
       }
+      if (!this.hasInit) {
+        this.hasInit = true;
+      }
+      //通过事件初始化切换清晰度组件
       player.ready(videojs.bind(this, function () {
         let tech = this.player.tech(true);
-        tech.trigger({ type: 'loadedqualitydata', data: this.initQualityData(options) });
+        tech.trigger({type: 'loadedqualitydata', data: this.initQualityData(options)});
         //避免切换的时候 video的poster自动显示
-        if('Html5' == tech.name_){
+        if ('Html5' == tech.name_) {
           delete tech.el_.poster;
           player.one('loadedmetadata', function () {
-            tech.el_.setAttribute('poster','');
+            tech.el_.setAttribute('poster', '');
           });
         }
       }));
@@ -77,6 +78,7 @@ class MultiResolution extends Plugin{
    * data = {Object} multiResolution
    */
   update(data){
+    console.log(this, data);
     this.init(data);
   }
   /**

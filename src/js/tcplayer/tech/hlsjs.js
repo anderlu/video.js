@@ -84,8 +84,9 @@ class Html5HlsJS{
       this.trigger({ type: 'loadedqualitydata', data: payload });
     },1);
     // this.tech.trigger({ type: 'loadedqualitydata', data: payload });
-
+    let self = this;
     function _levelLabel(level) {
+      console.log(level, self);
       if (level.height) return level.height + "p";
       else if (level.width) return Math.round(level.width * 9 / 16) + "p";
       else if (level.bitrate) return (level.bitrate / 1000) + "kbps";

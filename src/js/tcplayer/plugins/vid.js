@@ -17,7 +17,7 @@ class VID extends Plugin{
   init(playerOptions) {
     let sources = playerOptions.sources;
     if(playerOptions && playerOptions.appID && playerOptions.fileID){
-      // vid mode switch async loader
+      // vid mode switch to async loader
       playerOptions.children[0] = 'MediaAsyncLoader';
     }else if(sources.length>0){
       // url mode

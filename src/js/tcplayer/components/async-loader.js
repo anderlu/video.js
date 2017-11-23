@@ -25,6 +25,7 @@ import jsonp from '../utils/jsonp.js';
  * version:v2
  * interface:getplayinfo
  *
+ * @link MultiResolution
  * @extends Component
  */
 class MediaAsyncLoader extends Component {
@@ -72,49 +73,161 @@ class MediaAsyncLoader extends Component {
     if (!error) {
       log('play cgi', result);
       // log('play cgi', result, this.parserCgiData(result.playerInfo));
-      player.poster(result.data.file_info.image_url);
-      // player.poster(result.playerInfo.coverInfo.coverUrl);
+      // player.poster(result.data.file_info.image_url);
       // player.src(this.parserCgiData(result));
 
-
-      // user master playlist
-
-      // use multi resolution sources
-
-      // player.updateMultiResolution(multiResolution);
+      result = {
+        "code": 0,
+        "message": "",
+        "playerInfo": {
+          "playerId": "64655",
+          "name": "初始播放器",
+          "patchList": "贴片url  需要重构",
+          "videoClassification": [
+            {
+              "id":"LD",
+              "name": "低清",
+              "definitionList": [10, 210]
+            },
+            {
+              "id": "SD",
+              "name": "标清",
+              "definitionList": [20, 220]
+            },
+            {
+              "id": "HD",
+              "name": "高清",
+              "definitionList": [30, 230]
+            },
+            {
+              "id": "FHD",
+              "name": "超清",
+              "definitionList": [40, 240]
+            },
+            {
+              "id": "2K",
+              "name": "2k",
+              "definitionList": []
+            }
+          ],
+          "coverInfo": {
+            "coverUrl": "//p.qpic.cn/videoyun/0/200002400_202abdae6f1a11e6a7e02f1fb3c08277_1/640"
+          },
+          "imageSpriteInfo": {
+            "imageSpriteList": [{
+              "definition": 10,
+              "templateName": "默认雪碧图模板",
+              "height": 576,
+              "width": 1024,
+              "totalCount": 100,
+              "webVttUrl": "http://xxx/yyy.vtt",
+              "imageUrls": [
+                "http://xxxx.vod2.myqcloud.com/xxxx/xxxx/imageSprite/1490065623_3650079727.100_0.jpg"
+              ]
+            }]
+          },
+          "videoInfo": {
+            "sourceVideo": {
+              "size": 10556,
+              "container": "m4a",
+              "duration": 3601,
+              "bitrate": 246035,
+              "height": 480,
+              "width": 640,
+              "videoStreamList": [{
+                "bitrate": 246000,
+                "height": 480,
+                "width": 640,
+                "codec": "h264",
+                "fps": 222
+              }],
+              "audioStreamList": [{
+                "codec": "aac",
+                "samplingRate": 44100,
+                "bitrate": 35
+              }]
+            },
+            "masterPlaylist": {
+              "idrAligned": true,
+              "url": "//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+              "definition": 10000,
+              "templateName": "HLS Master Playlist",
+              "md5": "bfcf7c6f154b18890661f9e80b0731d0"
+            },
+            "transcodeList": [{
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f20.mp4",
+              "definition": 20
+            },{
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4",
+              "definition": 40
+            },{
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f220.m3u8",
+              "definition": 210
+            },{
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f230.m3u8",
+              "definition": 230
+            },{
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f240.m3u8",
+              "definition": 240
+            }]
+          }
+        }
+      };
+      player.poster(result.playerInfo.coverInfo.coverUrl);
+      let data;
+      if(result.playerInfo.videoInfo.masterPlaylist){
+        // user master playlist 优先使用master playlist
+        data = this.getMasterSouces(result.playerInfo);
+        player.src(data);
+      }else{
+        // use multi resolution sources
+        data = this.getMultiResolutionSouces(result.playerInfo);
+        player.MultiResolution().update(data);
+      }
+      console.log(typeof data, data);
 
       //
-      player.src([
-        {
-          src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-          type: 'application/x-mpegURL',
-          label: '720p'//如果设置了，认为开启了分辨率切换功能
-        }, {
-          src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
-          type: 'video/mp4',
-          label: '480p'
-        }
-      ]);
-
-      // trigger multiresolutionchange
+      // player.src([
+      //   {
+      //     src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
+      //     type: 'application/x-mpegURL',
+      //     label: '720p'//如果设置了，认为开启了分辨率切换功能
+      //   }, {
+      //     src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
+      //     type: 'video/mp4',
+      //     label: '480p'
+      //   }
+      // ]);
     } else {
       //error timeout
       log.error(error);
     }
   }
+
   /**
-   *
-   * @param {Object} playerInfo
-   *  - masterPlaylist {Object}
-   *    HLS master playlist，包含所有的hls media playlist
-   *  - transcodeList {Array}
-   *    转码后的视频数据，可能是mp4、hls media playlist、flv[待定]
-   * @returns {Array|Object}
+   * 获取master player list 提供给player.src & quality switcher
+   * @param playerInfo
+   * @returns {Array}
    *  - Array
    *    [{
    *      'src': ''
    *      'type': ''
    *    }]
+   */
+  getMasterSouces(playerInfo) {
+    let masterPlaylist = playerInfo.videoInfo.masterPlaylist,
+      sources = [];
+    sources.push({
+      'src': masterPlaylist.url,
+      'type': Constant.EXT_MIME['m3u8']
+    });
+    return sources
+  }
+
+  /**
+   * 获取多分辨率数据 提供给mutil resolution plugin & quality switcher 使用
+   * @param playerInfo
+   * @returns {{sources: {}, labels: {}, showOrder: Array, defaultRes: string}}
    *  - Object
    *    multiResolution:
    *    {
@@ -124,31 +237,43 @@ class MediaAsyncLoader extends Component {
    *      'defaultRes': 'sd'
    *    }
    */
-  parserCgiData(playerInfo){
-    let masterPlaylist = playerInfo.videoInfo.masterPlaylist,
-        transcodeList = playerInfo.videoInfo.transcodeList,
-        sources = [];
-    //优先使用master playlist, 包含多码率数据
-    if(masterPlaylist){
-      sources.push({
-        'src' : masterPlaylist.url,
-        'type' : Constant.EXT_MIME['m3u8']
-      });
-      return sources;
-    }else{
-      //构造多分辨率数据
-      let multiResolution = {};
-
-      for(let i=0; i < transcodeList.length; i++){
-        let source = {
-          'src' : transcodeList[i].url,
-          'type' : this.getMIMEType(transcodeList[i].url),
-          'label': '',
-          'resolution': transcodeList[i].definition
-        };
-        sources.push(source);
+  getMultiResolutionSouces(playerInfo) {
+    let multiResolution = {
+        'sources': {},
+        'labels': {},
+        'showOrder': [],
+        'defaultRes': ''
+      },
+      sources = [],
+      transcodeList = playerInfo.videoInfo.transcodeList,
+      resolutionConfig = playerInfo.videoClassification,
+      self = this;
+    resolutionConfig.forEach(function (configItem, index) {
+      // console.log(configItem, index);
+      if(transcodeList.length > 0){
+        // console.log(transcodeList.length, multiResolution);
+        transcodeList = transcodeList.filter(function (source) {
+          if(configItem['definitionList'].indexOf(source.definition)>-1){
+            if(!sources[configItem.id]){
+              multiResolution['showOrder'].push(configItem.id);
+              multiResolution['labels'][configItem.id] = configItem.name;
+              sources[configItem.id] = [];
+            }
+            sources[configItem.id].push({
+              'src' : source.url,
+              'type' : self.getMIMEType(source.url),
+            });
+          }else{
+            return true;
+          }
+        });
       }
-    }
+    });
+    multiResolution['sources'] = sources;
+    //默认播放清晰度，需要接口返回
+    multiResolution['defaultRes'] = playerInfo.defaultRes || Object.keys(sources)[0];
+    // console.log(multiResolution);
+    return multiResolution;
   }
 
   /**
@@ -165,6 +290,10 @@ class MediaAsyncLoader extends Component {
       return '';
     }
   }
+
+  /**
+   * 对sources进行排序，优先级rtmp>flv>m3u8>mp4
+   */
 }
 
 Component.registerComponent('MediaAsyncLoader', MediaAsyncLoader);
