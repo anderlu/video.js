@@ -65,11 +65,11 @@ class Html5HlsJS{
     }
 
     data.levels.forEach(function(level, index) {
-      let resolution = {}; // Don't write in level (shared reference with Hls.js)
+      let resolution = {};
       resolution.id = index;
       resolution.selected = index === _hls.manualLevel;
       resolution.label = _levelLabel(level);
-
+      //TODO 需要处理label自定义
       cleanTracklist.push(resolution);
     });
 
@@ -86,7 +86,7 @@ class Html5HlsJS{
     // this.tech.trigger({ type: 'loadedqualitydata', data: payload });
     let self = this;
     function _levelLabel(level) {
-      console.log(level, self);
+      // console.log(level, self);
       if (level.height) return level.height + "p";
       else if (level.width) return Math.round(level.width * 9 / 16) + "p";
       else if (level.bitrate) return (level.bitrate / 1000) + "kbps";

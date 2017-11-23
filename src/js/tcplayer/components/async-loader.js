@@ -72,9 +72,6 @@ class MediaAsyncLoader extends Component {
     let player = this.player();
     if (!error) {
       log('play cgi', result);
-      // log('play cgi', result, this.parserCgiData(result.playerInfo));
-      // player.poster(result.data.file_info.image_url);
-      // player.src(this.parserCgiData(result));
 
       result = {
         "code": 0,
@@ -177,29 +174,15 @@ class MediaAsyncLoader extends Component {
       let data;
       if(result.playerInfo.videoInfo.masterPlaylist){
         // user master playlist 优先使用master playlist
-        data = this.getMasterSouces(result.playerInfo);
-        player.src(data);
+        player.src(this.getMasterSouces(result.playerInfo));
       }else{
         // use multi resolution sources
-        data = this.getMultiResolutionSouces(result.playerInfo);
-        player.MultiResolution().update(data);
+        player.MultiResolution().update(this.getMultiResolutionSouces(result.playerInfo));
       }
       console.log(typeof data, data);
 
-      //
-      // player.src([
-      //   {
-      //     src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-      //     type: 'application/x-mpegURL',
-      //     label: '720p'//如果设置了，认为开启了分辨率切换功能
-      //   }, {
-      //     src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
-      //     type: 'video/mp4',
-      //     label: '480p'
-      //   }
-      // ]);
     } else {
-      //error timeout
+      //error or timeout
       log.error(error);
     }
   }
