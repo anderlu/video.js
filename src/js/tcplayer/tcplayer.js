@@ -14,7 +14,7 @@ import './tech/hlsjs.js';
 import './tech/flash/flash.js';
 import './tech/flash/flashls.js';
 import './components/skin/skin.js';
-import CN from  '../../../lang/zh-CN.json';
+import CN from '../../../lang/zh-CN.json';
 
 // import resourceLoader from './utils/resource-loader';
 
@@ -26,14 +26,20 @@ import CN from  '../../../lang/zh-CN.json';
 
 // window.videojs = videojs;
 videojs.addLanguage('zh-CN', CN);
+
 function TcPlayer(id, options, ready) {
   // TODO
+  // 默认开启的插件,有顺序要求，VID>QualitySwitcher>MultiResolution
   var plugins = {
-    VID:''
+    VID: '',
+    QualitySwitcher: {},
+    MultiResolution: {}
   };
-  options.plugins = videojs.mergeOptions(plugins, options.plugins);
-  console.log(options.plugins);
-  options.language = options.language || 'zh-CN';
+  if (options) {
+    options.plugins = videojs.mergeOptions(plugins, options.plugins);
+    console.log(options.plugins);
+    options.language = options.language || 'zh-CN';
+  }
 
   // var Player = videojs.getComponent('Player');
   // Player.prototype.options_.children[0] = '';
@@ -42,6 +48,7 @@ function TcPlayer(id, options, ready) {
 
   return player;
 }
+
 // TcPlayer.videojs = videojs;
 Object.assign(TcPlayer, videojs);
 

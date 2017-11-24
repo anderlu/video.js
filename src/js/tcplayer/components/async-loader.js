@@ -179,8 +179,6 @@ class MediaAsyncLoader extends Component {
         // use multi resolution sources
         player.MultiResolution().update(this.getMultiResolutionSouces(result.playerInfo));
       }
-      console.log(typeof data, data);
-
     } else {
       //error or timeout
       log.error(error);
@@ -238,6 +236,7 @@ class MediaAsyncLoader extends Component {
         transcodeList = transcodeList.filter(function (source) {
           if(configItem['definitionList'].indexOf(source.definition)>-1){
             if(!sources[configItem.id]){
+              //switcher控件的默认显示顺序将按照接口返回配置的数组顺序
               multiResolution['showOrder'].push(configItem.id);
               multiResolution['labels'][configItem.id] = configItem.name;
               sources[configItem.id] = [];

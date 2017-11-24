@@ -11,7 +11,7 @@ class VID extends Plugin{
    */
   constructor(player, options) {
     super(player);
-    // console.log('new VID', this, options);
+    console.log('new VID', this, options);
     this.init(this.player.options_);
   }
   init(playerOptions) {

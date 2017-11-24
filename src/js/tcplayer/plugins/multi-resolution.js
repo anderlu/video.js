@@ -3,8 +3,8 @@ import videojs from '../../video.js';
 const Plugin = videojs.getPlugin('plugin');
 
 let defaultOptions = {
-  'labels': {'sd':'标清','hd':'高清'},
-  'showOrder': ['sd','hd'],
+  'labels': {'ld': '低清', 'sd': '标清', 'hd': '高清', 'fhd': '超清'},
+  'showOrder': ['ld', 'sd', 'hd', 'fhd'],
   'defaultRes': 'sd'
 };
 
@@ -17,7 +17,7 @@ class MultiResolution extends Plugin{
    * {
    *  sources:{'sd':[{Object}]}
    *  labels:{'sd':'标清','hd':'高清'},
-   *  showOrder:['sd','hd'],
+   *  showOrder:['ld', 'sd', 'hd', 'fhd'],
    *  defaultRes: 'sd'
    * }
    */
@@ -30,6 +30,10 @@ class MultiResolution extends Plugin{
       if(event.data){
         this.update(data);
       }
+    }));
+    player.ready(videojs.bind(this, function(){
+      let tech = player.tech(true);
+      tech.on('masterplaylistchange', videojs.bind(this, this.onMasterPlaylistChange));
     }));
     //
     this.init(this.player.options_.multiResolution);
@@ -48,7 +52,7 @@ class MultiResolution extends Plugin{
     console.log('MultiResolution', this);
     if (multiResSources) {
       this.currentID = options.defaultRes = options.defaultRes || Object.keys(multiResSources)[0];
-      if(player.options_.children[0] == 'MediaLoader'){
+      if(player.options_.children[0] == 'mediaLoader' && !this.hasInit){
         //设置原始的sources，在medialoader初始化时使用
         player.options_.sources.push(...multiResSources[this.currentID]);
       }else{
@@ -80,6 +84,16 @@ class MultiResolution extends Plugin{
   update(data){
     console.log(this, data);
     this.init(data);
+  }
+
+  /**
+   * 处理hls获取的master playlist数据，重新匹配配置的显示分辨率、labels、order等
+   * @param event
+   */
+  onMasterPlaylistChange(event){
+    console.log('onMasterPlaylistChange', event, this.options);
+    let tech = this.player.tech(true);
+    tech.trigger({type: 'loadedqualitydata', data: event.data});
   }
   /**
    * quality switcher 的回调函数，参数为选中的item options

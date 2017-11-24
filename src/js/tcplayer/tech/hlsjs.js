@@ -21,7 +21,7 @@ class Html5HlsJS{
     this.hlsjsErrorHandler = this.errorHandlerFactory();
 
     hls.on(Hls.Events.ERROR, this.onError.bind(this));
-    hls.on(Hls.Events.MANIFEST_PARSED, this.onMetaData.bind(this));
+    hls.on(Hls.Events.MANIFEST_PARSED, videojs.bind(this, this.onMetaData));
     hls.on(Hls.Events.LEVEL_LOADED, this.onLevelLoaded.bind(this));
     //监听所有hls.js 事件
     for(let eventName in Hls.Events){
@@ -54,6 +54,7 @@ class Html5HlsJS{
     // console.log('hlsjs onMetaData', event, data);
     let cleanTracklist = [];
     let _hls = this.hls;
+    let self = this;
     //更新hls level 数据
     if (data.levels.length > 1) {
       let autoLevel = {
@@ -68,7 +69,7 @@ class Html5HlsJS{
       let resolution = {};
       resolution.id = index;
       resolution.selected = index === _hls.manualLevel;
-      resolution.label = _levelLabel(level);
+      resolution.label = self.getLevelLabel(level);
       //TODO 需要处理label自定义
       cleanTracklist.push(resolution);
     });
@@ -81,17 +82,16 @@ class Html5HlsJS{
     // 加载并解析master playlist后更新media playlist信息，并发出事件。
     // 为了避免hls解析快于插件初始化，导致插件不能正常触发时间，这里做延迟处理。
     this.tech.setTimeout(function () {
-      this.trigger({ type: 'loadedqualitydata', data: payload });
+      this.trigger({ type: 'masterplaylistchange', data: payload });
     },1);
     // this.tech.trigger({ type: 'loadedqualitydata', data: payload });
-    let self = this;
-    function _levelLabel(level) {
-      // console.log(level, self);
-      if (level.height) return level.height + "p";
-      else if (level.width) return Math.round(level.width * 9 / 16) + "p";
-      else if (level.bitrate) return (level.bitrate / 1000) + "kbps";
-      else return 0;
-    }
+  }
+  getLevelLabel(level) {
+    // console.log(level);
+    if (level.height) return level.height + "p";
+    else if (level.width) return Math.round(level.width * 9 / 16) + "p";
+    else if (level.bitrate) return (level.bitrate / 1000) + "kbps";
+    else return 0;
   }
   onLevelLoaded(event, data){
     // console.log('hlsjs level loaded', event, data);
