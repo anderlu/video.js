@@ -111,10 +111,14 @@ class MultiResolution extends Plugin{
     let player = this.player;
     let currentTime = player.currentTime();
     let isPaused = player.paused();
+
+    let w = player.controlBar.progressControl.seekBar.playProgressBar.el().style.width;
+
     //loadedmetadata
     // let event = 'loadeddata';
     let event = 'loadedmetadata';
     player.one(event, function () {
+      player.controlBar.progressControl.seekBar.playProgressBar.el().style.width = w;
       player.currentTime(currentTime);
       let promise = player.play();
       if(promise){
