@@ -113,14 +113,18 @@ class MultiResolution extends Plugin{
     let isPaused = player.paused();
 
     let w = player.controlBar.progressControl.seekBar.playProgressBar.el().style.width;
-
-    //loadedmetadata
-    // let event = 'loadeddata';
-    let event = 'loadedmetadata';
+    // ios 必须loadeddata后才能设置currentTime
+    // loadedmetadata trigger faster then loadeddata
+    let event = videojs.browser.IS_IOS || videojs.browser.IS_ANDROID ? 'loadeddata' : 'loadedmetadata';
+    console.log('switchResolution');
     player.one(event, function () {
       player.controlBar.progressControl.seekBar.playProgressBar.el().style.width = w;
       player.currentTime(currentTime);
       let promise = player.play();
+
+      /**
+       * 某些浏览器例如chrome 不能同步调用pause
+       */
       if(promise){
         promise.then(function () {
           if(isPaused){

@@ -23,11 +23,12 @@
 </head>
 <body>
 
-<video id="player1" class="video-js vjs-default-skin" controls preload="auto" width="480" height="270" playsinline webkit-playinline muted>
+<video id="player1" class="video-js vjs-default-skin" controls preload="auto" width="414" height="270" playsinline webkit-playinline muted>
   <!--<source src="//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8" type="application/x-mpegURL">-->
   <!--<source src="//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4" type="video/mp4">-->
 </video>
-
+<!--<script src="//imgcache.qq.com/open/qcloud/video/share/js/vconsole.min.js"></script>-->
+<!--x5-video-player-type="h5" x5-video-player-fullscreen="true"-->
 <script>
 //  (function () {
 
@@ -36,7 +37,31 @@ var beforeSetup = function(videoEl, options) {
 //  TcPlayer.getComponent('Player').prototype.options_.children.splice(0,1);//改变初始化组件
   return options;
 };
-
+var events = [
+  'loadstart',
+  'suspend',
+  'abort',
+  'error',
+  'emptied',
+  'stalled',
+  'loadedmetadata',
+  'loadeddata',
+  'canplay',
+  'canplaythrough',
+  'playing',
+  'waiting',
+  'seeking',
+  'seeked',
+  'ended',
+  'durationchange',
+  'timeupdate',
+  'progress',
+  'play',
+  'pause',
+  'ratechange',
+  'resize',
+  'volumechange'
+];
 // add the hook
 TcPlayer.hook('beforesetup', beforeSetup);
 
@@ -111,6 +136,12 @@ TcPlayer.hook('beforesetup', beforeSetup);
     });
     player.ready(function() {
       console.log('player cb ready');
+      events.forEach(function(val, i){
+        player.tech_.on(val, function (event) {
+          if(val !='timeupdate')
+          console.log(val);
+        });
+      })
     });
 
     player.on('ready', function() {

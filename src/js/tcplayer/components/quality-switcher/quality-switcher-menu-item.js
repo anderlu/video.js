@@ -14,7 +14,9 @@ class QualitySwitcherMenuItem extends MenuItem {
     //options 包含的值在 QualitySwitcherMenuButton 初始化Item时传入
     this.options_.callback(this.options_);
     if(this.options_.trackType == 'video'){
-      this.player().controlBar.getChild(this.options_.trackType + 'QualitySwitcherMenuButton').updateLabel(this.options_);
+      let menuButton = this.player().controlBar.getChild(this.options_.trackType + 'QualitySwitcherMenuButton');
+      menuButton.updateLabel(this.options_);
+      menuButton.unpressButton();
     }
   }
   /**

@@ -24,3 +24,6 @@ BigPlayButton.prototype.createEl = function(){
   }));
   return el;
 };
+/**
+ * 修改已有component 的原型方法，不需要register
+ */

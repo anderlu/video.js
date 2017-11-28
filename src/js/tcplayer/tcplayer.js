@@ -6,6 +6,7 @@
 import videojs from '../video.js';
 //引入自定义模块
 import './components/async-loader.js';
+import './plugins/skin.js';
 import './plugins/vid.js';
 import './plugins/dvr.js';
 import './plugins/quality-switcher.js';
@@ -13,7 +14,6 @@ import './plugins/multi-resolution.js';
 import './tech/hlsjs.js';
 import './tech/flash/flash.js';
 import './tech/flash/flashls.js';
-import './components/skin/skin.js';
 import CN from '../../../lang/zh-CN.json';
 
 // import resourceLoader from './utils/resource-loader';
@@ -31,6 +31,7 @@ function TcPlayer(id, options, ready) {
   // TODO
   // 默认开启的插件,有顺序要求，VID>QualitySwitcher>MultiResolution
   var plugins = {
+    Skin:'',
     VID: '',
     QualitySwitcher: {},
     MultiResolution: {}
