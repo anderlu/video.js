@@ -120,21 +120,30 @@ class MultiResolution extends Plugin{
     player.one(event, function () {
       player.controlBar.progressControl.seekBar.playProgressBar.el().style.width = w;
       player.currentTime(currentTime);
-      let promise = player.play();
-
-      /**
-       * 某些浏览器例如chrome 不能同步调用pause
-       */
-      if(promise){
-        promise.then(function () {
-          if(isPaused){
+      console.log('switch', event,player.tech(true));
+      // player.bigPlayButton && player.bigPlayButton.show();
+      // player.posterImage && player.posterImage.show();
+      // FLash模式下需要手动处理seeked事件
+      if(player.techName_ == 'Flash'){
+        player.play();
+        if(isPaused){
+          setTimeout(function(){
             player.pause();
-          }
-        });
+          },1);
+        }
+        // player.handleTechSeeked_();
+        player.tech(true).trigger('seeked');
+      }else{
+        let promise = player.play();
+        // 某些浏览器例如chrome 不能同步调用pause
+        if(promise){
+          promise.then(function () {
+            if(isPaused){
+              player.pause();
+            }
+          });
+        }
       }
-      //   player.bigPlayButton && player.bigPlayButton.show();
-      //   player.posterImage && player.posterImage.show();
-      // player.handleTechSeeked_();
     });
     player.bigPlayButton && player.bigPlayButton.hide();
     player.posterImage && player.posterImage.hide();
