@@ -120,7 +120,7 @@ class MultiResolution extends Plugin{
     player.one(event, function () {
       player.controlBar.progressControl.seekBar.playProgressBar.el().style.width = w;
       player.currentTime(currentTime);
-      console.log('switch', event,player.tech(true));
+      // console.log('switch', event,player.tech(true));
       // player.bigPlayButton && player.bigPlayButton.show();
       // player.posterImage && player.posterImage.show();
       // FLash模式下需要手动处理seeked事件

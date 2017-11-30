@@ -11,6 +11,7 @@ import './plugins/vid.js';
 import './plugins/dvr.js';
 import './plugins/quality-switcher.js';
 import './plugins/multi-resolution.js';
+import './plugins/errors.js';
 import './tech/hlsjs.js';
 import './tech/flash/flash.js';
 import './tech/flash/flashls.js';
@@ -34,7 +35,8 @@ function TcPlayer(id, options, ready) {
     Skin:'',
     VID: '',
     QualitySwitcher: {},
-    MultiResolution: {}
+    MultiResolution: {},
+    Errors:{}
   };
   if (options) {
     options.plugins = videojs.mergeOptions(plugins, options.plugins);
