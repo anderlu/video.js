@@ -18,46 +18,44 @@ const defaults = {
   errors: {
     '1': {
       type: 'MEDIA_ERR_ABORTED',
-      headline: 'The video download was cancelled'
+      // message: 'The video download was cancelled'
     },
     '2': {
       type: 'MEDIA_ERR_NETWORK',
-      headline: 'The video connection was lost, please confirm you are ' +
-      'connected to the internet'
+      // message: 'The video connection was lost, please confirm you are ' + 'connected to the internet'
     },
     '3': {
       type: 'MEDIA_ERR_DECODE',
-      headline: 'The video is bad or in a format that cannot be played on your browser'
+      // message: 'The video is bad or in a format that cannot be played on your browser'
     },
     '4': {
       type: 'MEDIA_ERR_SRC_NOT_SUPPORTED',
-      headline: 'This video is either unavailable or not supported in this browser'
+      // message: 'This video is either unavailable or not supported in this browser'
     },
     '5': {
       type: 'MEDIA_ERR_ENCRYPTED',
-      headline: 'The video you are trying to watch is encrypted and we do not know how ' +
-      'to decrypt it'
+      // message: 'The video you are trying to watch is encrypted and we do not know how ' + 'to decrypt it'
     },
     'unknown': {
       type: 'MEDIA_ERR_UNKNOWN',
-      headline: 'An unanticipated problem was encountered, check back soon and try again'
+      // message: 'An unanticipated problem was encountered, check back soon and try again'
     },
     '-1': {
       type: 'PLAYER_ERR_NO_SRC',
-      headline: 'No video has been loaded'
+      message: 'No video has been loaded.'
     },
     '-2': {
       type: 'PLAYER_ERR_TIMEOUT',
-      headline: 'Could not download the video'
+      message: 'Could not download the video.'
     },
     'PLAYER_ERR_DOMAIN_RESTRICTED': {
-      headline: 'This video is restricted from playing on your current domain'
+      message: 'This video is restricted from playing on your current domain.'
     },
     'PLAYER_ERR_IP_RESTRICTED': {
-      headline: 'This video is restricted at your current IP address'
+      message: 'This video is restricted at your current IP address.'
     },
     'PLAYER_ERR_GEO_RESTRICTED': {
-      headline: 'This video is restricted from playing in your current geographic region'
+      message: 'This video is restricted from playing in your current geographic region.'
     }
   }
 };
@@ -67,6 +65,8 @@ const initPlugin = function(player, options) {
   let waiting;
   let isStalling;
   const listeners = [];
+  //避免errorDisplay 在触发error后重新填充弹框内容
+  videojs.getComponent('ErrorDisplay').prototype.options_.fillAlways = false;
 
   const updateErrors = function(updates) {
     options.errors = videojs.mergeOptions(options.errors, updates);
@@ -216,60 +216,67 @@ const initPlugin = function(player, options) {
     if (!error) {
       return;
     }
-
+    console.log(error, options.errors[error.code || 0]);
     error = videojs.mergeOptions(error, options.errors[error.code || 0]);
+    /*
+        if (error.code === 4 && FlashObj && !FlashObj.isSupported()) {
+          const flashMessage = player.localize(
+            'If you are using an older browser please try upgrading or installing Flash.'
+          );
+
+          details += `<span class="vjs-errors-flashmessage">${flashMessage}</span>`;
+        }
+    */
 
     if (error.message) {
-      details = `<div class="vjs-errors-details">${player.localize('Technical details')}
-        : <div class="vjs-errors-message">${player.localize(error.message)}</div>
-        </div>`;
+      details = `<div class="vjs-errors-message">${ player.localize(error.message) }</div>`;
     }
-
-    if (error.code === 4 && FlashObj && !FlashObj.isSupported()) {
-      const flashMessage = player.localize(
-        'If you are using an older browser please try upgrading or installing Flash.'
-      );
-
-      details += `<span class="vjs-errors-flashmessage">${flashMessage}</span>`;
+    if(error.type){
+      details += `<div class="vjs-errors-code">${this.localize('Error Code')} : ${ error.code }</div>`
     }
-
-    const display = player.getChild('errorDisplay');
-
+    if(error.code){
+      details += `<div class="vjs-errors-type">${this.localize('Error Type')} : ${ error.type }</div>`
+    }
     content.className = 'vjs-errors-dialog';
-    content.id = 'vjs-errors-dialog';
+    // content.id = 'vjs-errors-dialog';
+    // dialogContent =
+    //   `<div class="vjs-errors-content-container">
+    //   <h2 class="vjs-errors-headline">${this.localize(error.headline)}</h2>
+    //     <div><b>${this.localize('Error Code')}</b>: ${(error.type || error.code)}</div>
+    //     ${details}
+    //   </div>`;
+
     dialogContent =
       `<div class="vjs-errors-content-container">
-      <h2 class="vjs-errors-headline">${this.localize(error.headline)}</h2>
-        <div><b>${this.localize('Error Code')}</b>: ${(error.type || error.code)}</div>
-        ${details}
+        ${ details }
       </div>`;
-
+    const display = player.getChild('errorDisplay');
     const closeable = display.closeable(!('dismiss' in error) || error.dismiss);
 
     // We should get a close button
     if (closeable) {
-      dialogContent +=
-        `<div class="vjs-errors-ok-button-container">
-          <button class="vjs-errors-ok-button">${this.localize('OK')}</button>
-        </div>`;
+      // dialogContent +=
+      //   `<div class="vjs-errors-ok-button-container">
+      //     <button class="vjs-errors-ok-button">${this.localize('OK')}</button>
+      //   </div>`;
       content.innerHTML = dialogContent;
       display.fillWith(content);
       // Get the close button inside the error display
       display.contentEl().firstChild.appendChild(display.getChild('closeButton').el());
 
-      const okButton = display.el().querySelector('.vjs-errors-ok-button');
+      // const okButton = display.el().querySelector('.vjs-errors-ok-button');
 
-      player.on(okButton, 'click', function() {
-        display.close();
-      });
+      // player.on(okButton, 'click', function() {
+      //   display.close();
+      // });
     } else {
       content.innerHTML = dialogContent;
       display.fillWith(content);
     }
 
-    if (player.currentWidth() <= 600 || player.currentHeight() <= 250) {
-      display.addClass('vjs-xs');
-    }
+    // if (player.currentWidth() <= 600 || player.currentHeight() <= 250) {
+    //   display.addClass('vjs-xs');
+    // }
 
     display.one('modalclose', () => player.error(null));
   };
@@ -278,8 +285,8 @@ const initPlugin = function(player, options) {
     cleanup();
 
     player.removeClass('vjs-errors');
-    player.off('play', onPlayStartMonitor);
-    player.off('play', onPlayNoSource);
+    // player.off('play', onPlayStartMonitor);
+    // player.off('play', onPlayNoSource);
     player.off('dispose', onDisposeHandler);
     player.off(['aderror', 'error'], onErrorHandler);
   };
@@ -297,8 +304,8 @@ const initPlugin = function(player, options) {
     onPlayStartMonitor();
   };
 
-  player.on('play', onPlayStartMonitor);
-  player.on('play', onPlayNoSource);
+  // player.on('play', onPlayStartMonitor);
+  // player.on('play', onPlayNoSource);
   player.on('dispose', onDisposeHandler);
   player.on(['aderror', 'error'], onErrorHandler);
 

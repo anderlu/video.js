@@ -152,11 +152,20 @@ class MediaAsyncLoader extends Component {
               "md5": "bfcf7c6f154b18890661f9e80b0731d0"
             },
             "transcodeList": [{
-              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b90318682229502572961/f0.f20.mp4",
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f20.mp4",
               "definition": 20
             },{
               "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4",
               "definition": 40
+            },{
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f220.m3u8",
+              "definition": 210
+            },{
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f230.m3u8",
+              "definition": 230
+            },{
+              "url": "//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f240.m3u8",
+              "definition": 240
             }]
           }
         }
@@ -173,7 +182,7 @@ class MediaAsyncLoader extends Component {
     } else {
       //error or timeout
       log.error(error);
-      this.player().trigger('error');
+      this.player().error({'code':'-2'});
     }
   }
 
