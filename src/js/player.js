@@ -1,7 +1,7 @@
 /**
  * @file player.js
  */
- // Subclasses Component
+// Subclasses Component
 import Component from './component.js';
 
 import {version} from '../../package.json';
@@ -15,9 +15,9 @@ import * as Fn from './utils/fn.js';
 import * as Guid from './utils/guid.js';
 import * as browser from './utils/browser.js';
 import log from './utils/log.js';
-import toTitleCase, { titleCaseEquals } from './utils/to-title-case.js';
-import { createTimeRange } from './utils/time-ranges.js';
-import { bufferedPercent } from './utils/buffer.js';
+import toTitleCase, {titleCaseEquals} from './utils/to-title-case.js';
+import {createTimeRange} from './utils/time-ranges.js';
+import {bufferedPercent} from './utils/buffer.js';
 import * as stylesheet from './utils/stylesheet.js';
 import FullscreenApi from './fullscreen-api.js';
 import MediaError from './media-error.js';
@@ -321,11 +321,11 @@ class Player extends Component {
     // if the global option object was accidentally blown away by
     // someone, bail early with an informative error
     if (!this.options_ ||
-        !this.options_.techOrder ||
-        !this.options_.techOrder.length) {
+      !this.options_.techOrder ||
+      !this.options_.techOrder.length) {
       throw new Error('No techOrder specified. Did you overwrite ' +
-                      'videojs.options instead of just changing the ' +
-                      'properties you want to override?');
+        'videojs.options instead of just changing the ' +
+        'properties you want to override?');
     }
 
     // Store the original tag used to set options
@@ -342,7 +342,7 @@ class Player extends Component {
       // Normalise player option languages to lowercase
       const languagesToLower = {};
 
-      Object.getOwnPropertyNames(options.languages).forEach(function(name) {
+      Object.getOwnPropertyNames(options.languages).forEach(function (name) {
         languagesToLower[name.toLowerCase()] = options.languages[name];
       });
       this.languages_ = languagesToLower;
@@ -391,7 +391,7 @@ class Player extends Component {
     if (options.plugins) {
       const plugins = options.plugins;
 
-      Object.keys(plugins).forEach(function(name) {
+      Object.keys(plugins).forEach(function (name) {
         if (typeof this[name] === 'function') {
           this[name](plugins[name]);
         } else {
@@ -550,7 +550,7 @@ class Player extends Component {
     tag.removeAttribute('width');
     tag.removeAttribute('height');
 
-    Object.getOwnPropertyNames(attrs).forEach(function(attr) {
+    Object.getOwnPropertyNames(attrs).forEach(function (attr) {
       // workaround so we don't totally break IE7
       // http://stackoverflow.com/questions/3653444/css-styles-not-applied-on-dynamic-elements-in-internet-explorer-7
       if (attr === 'class') {
@@ -1041,6 +1041,9 @@ class Player extends Component {
    * @private
    */
   addTechControlsListeners_() {
+    if ( !this.tech_ ) {
+      return;
+    }
     // Make sure to remove all the previous listeners in case we are called multiple times.
     this.removeTechControlsListeners_();
 
@@ -1071,13 +1074,14 @@ class Player extends Component {
   removeTechControlsListeners_() {
     // We don't want to just use `this.off()` because there might be other needed
     // listeners added by techs that extend this.
-    if (this.tech_) {
-      this.off(this.tech_, 'tap', this.handleTechTap_);
-      this.off(this.tech_, 'touchstart', this.handleTechTouchStart_);
-      this.off(this.tech_, 'touchmove', this.handleTechTouchMove_);
-      this.off(this.tech_, 'touchend', this.handleTechTouchEnd_);
-      this.off(this.tech_, 'mousedown', this.handleTechClick_);
+    if ( !this.tech_ ) {
+      return;
     }
+    this.off(this.tech_, 'tap', this.handleTechTap_);
+    this.off(this.tech_, 'touchstart', this.handleTechTouchStart_);
+    this.off(this.tech_, 'touchmove', this.handleTechTouchMove_);
+    this.off(this.tech_, 'touchend', this.handleTechTouchEnd_);
+    this.off(this.tech_, 'mousedown', this.handleTechClick_);
   }
 
   /**
@@ -1588,7 +1592,7 @@ class Player extends Component {
   techCall_(method, arg) {
     // If it's not ready yet, call method when it is
 
-    this.ready(function() {
+    this.ready(function () {
       if (method in middleware.allowedSetters) {
         return middleware.set(this.middleware_, this.tech_, method, arg);
       }
@@ -1659,26 +1663,28 @@ class Player extends Component {
    */
   play() {
     if (this.changingSrc_) {
-      this.ready(function() {
+      this.ready(function () {
         const retval = this.techGet_('play');
 
         // silence errors (unhandled promise from play)
         if (retval !== undefined && typeof retval.then === 'function') {
-          retval.then(null, (e) => {});
+          retval.then(null, (e) => {
+          });
         }
       });
 
-    // Only calls the tech's play if we already have a src loaded
+      // Only calls the tech's play if we already have a src loaded
     } else if (this.isReady_ && (this.src() || this.currentSrc())) {
       return this.techGet_('play');
     } else {
-      this.ready(function() {
-        this.tech_.one('loadstart', function() {
+      this.ready(function () {
+        this.tech_.one('loadstart', function () {
           const retval = this.play();
 
           // silence errors (unhandled promise from play)
           if (retval !== undefined && typeof retval.then === 'function') {
-            retval.then(null, (e) => {});
+            retval.then(null, (e) => {
+            });
           }
         });
       });
@@ -2259,7 +2265,7 @@ class Player extends Component {
     // Iterate over each `innerArray` element once per `outerArray` element and execute
     // `tester` with both. If `tester` returns a non-falsy value, exit early and return
     // that value.
-    const findFirstPassingTechSourcePair = function(outerArray, innerArray, tester) {
+    const findFirstPassingTechSourcePair = function (outerArray, innerArray, tester) {
       let found;
 
       outerArray.some((outerChoice) => {
@@ -2326,8 +2332,8 @@ class Player extends Component {
     // it was filtered to a zero length Array. So we have to
     // show an error
     if (!sources.length) {
-      this.setTimeout(function() {
-        this.error({ code: 4, message: this.localize(this.options_.notSupportedMessage) });
+      this.setTimeout(function () {
+        this.error({code: 4, message: this.localize(this.options_.notSupportedMessage)});
       }, 0);
       return;
     }
@@ -2351,8 +2357,8 @@ class Player extends Component {
         }
 
         // We need to wrap this in a timeout to give folks a chance to add error event handlers
-        this.setTimeout(function() {
-          this.error({ code: 4, message: this.localize(this.options_.notSupportedMessage) });
+        this.setTimeout(function () {
+          this.error({code: 4, message: this.localize(this.options_.notSupportedMessage)});
         }, 0);
 
         // we could not find an appropriate tech, but let's still notify the delegate that this is it
@@ -2399,7 +2405,7 @@ class Player extends Component {
     }
 
     // wait until the tech is ready to set the source
-    this.ready(function() {
+    this.ready(function () {
 
       // The setSource tech method was added with source handlers
       // so older techs won't support it
@@ -2415,7 +2421,7 @@ class Player extends Component {
         this.load();
       }
 
-    // Set the source synchronously if possible (#2326)
+      // Set the source synchronously if possible (#2326)
     }, true);
 
     return false;
@@ -2833,7 +2839,7 @@ class Player extends Component {
           // When this gets resolved in ALL browsers it can be removed
           // https://code.google.com/p/chromium/issues/detail?id=103041
           if (this.tech_) {
-            this.tech_.one('mousemove', function(e) {
+            this.tech_.one('mousemove', function (e) {
               e.stopPropagation();
               e.preventDefault();
             });
@@ -2864,7 +2870,7 @@ class Player extends Component {
     let lastMoveY;
     const handleActivity = Fn.bind(this, this.reportUserActivity);
 
-    const handleMouseMove = function(e) {
+    const handleMouseMove = function (e) {
       // #1068 - Prevent mousemove spamming
       // Chrome Bug: https://code.google.com/p/chromium/issues/detail?id=366970
       if (e.screenX !== lastMoveX || e.screenY !== lastMoveY) {
@@ -2874,7 +2880,7 @@ class Player extends Component {
       }
     };
 
-    const handleMouseDown = function() {
+    const handleMouseDown = function () {
       handleActivity();
       // For as long as the they are touching the device or have their mouse down,
       // we consider them active even if they're not moving their finger or mouse.
@@ -2886,7 +2892,7 @@ class Player extends Component {
       mouseInProgress = this.setInterval(handleActivity, 250);
     };
 
-    const handleMouseUp = function(event) {
+    const handleMouseUp = function (event) {
       handleActivity();
       // Stop the interval that maintains activity if the mouse/touch is down
       this.clearInterval(mouseInProgress);
@@ -2909,7 +2915,7 @@ class Player extends Component {
     // http://ejohn.org/blog/learning-from-twitter/
     let inactivityTimeout;
 
-    this.setInterval(function() {
+    this.setInterval(function () {
       // Check to see if mouse/touch activity has happened
       if (this.userActivity_) {
         // Reset the activity tracker
@@ -2926,7 +2932,7 @@ class Player extends Component {
         if (timeout > 0) {
           // In <timeout> milliseconds, if no more activity has occurred the
           // user will be considered inactive
-          inactivityTimeout = this.setTimeout(function() {
+          inactivityTimeout = this.setTimeout(function () {
             // Protect against the case where the inactivityTimeout can trigger just
             // before the next user activity is picked up by the activity check loop
             // causing a flicker
@@ -3272,11 +3278,11 @@ class Player extends Component {
     // Note: We don't actually use flexBasis (or flexOrder), but it's one of the more
     // common flex features that we can rely on when checking for flex support.
     return !('flexBasis' in elem.style ||
-            'webkitFlexBasis' in elem.style ||
-            'mozFlexBasis' in elem.style ||
-            'msFlexBasis' in elem.style ||
-            // IE10-specific (2012 flex spec)
-            'msFlexOrder' in elem.style);
+      'webkitFlexBasis' in elem.style ||
+      'mozFlexBasis' in elem.style ||
+      'msFlexBasis' in elem.style ||
+      // IE10-specific (2012 flex spec)
+      'msFlexOrder' in elem.style);
   }
 }
 
@@ -3329,10 +3335,10 @@ class Player extends Component {
  * @method Player.prototype.remoteTextTrackEls
  */
 
-TRACK_TYPES.names.forEach(function(name) {
+TRACK_TYPES.names.forEach(function (name) {
   const props = TRACK_TYPES[name];
 
-  Player.prototype[props.getterName] = function() {
+  Player.prototype[props.getterName] = function () {
     if (this.tech_) {
       return this.tech_[props.getterName]();
     }
@@ -3465,14 +3471,14 @@ Player.prototype.options_ = {
    * @method Player#readyState
    */
   'readyState'
-].forEach(function(fn) {
-  Player.prototype[fn] = function() {
+].forEach(function (fn) {
+  Player.prototype[fn] = function () {
     return this.techGet_(fn);
   };
 });
 
-TECH_EVENTS_RETRIGGER.forEach(function(event) {
-  Player.prototype[`handleTech${toTitleCase(event)}_`] = function() {
+TECH_EVENTS_RETRIGGER.forEach(function (event) {
+  Player.prototype[`handleTech${toTitleCase(event)}_`] = function () {
     return this.trigger(event);
   };
 });

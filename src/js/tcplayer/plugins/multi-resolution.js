@@ -33,7 +33,9 @@ class MultiResolution extends Plugin{
     }));
     player.ready(videojs.bind(this, function(){
       let tech = player.tech(true);
-      tech.on('masterplaylistchange', videojs.bind(this, this.onMasterPlaylistChange));
+      if(tech){
+        tech.on('masterplaylistchange', videojs.bind(this, this.onMasterPlaylistChange));
+      }
     }));
     //
     this.init(this.player.options_.multiResolution);

@@ -155,7 +155,7 @@ const umdTcPlayer = {
     /* 避免打包外部lib */
     external: ['hls.js'],
     globals:{
-      'hls.js':'Hls'
+      'hls.js' : 'Hls'
     }
   },
   banner: compiledLicense(Object.assign({includesVtt: true}, bannerData)),

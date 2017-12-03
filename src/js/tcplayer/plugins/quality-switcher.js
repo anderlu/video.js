@@ -37,7 +37,9 @@ class QualitySwitcher extends Plugin{
       player.ready(function(){
         // console.log('QualitySwitcher on ready', options);
         tech = self.player.tech(true);
-        tech.on('loadedqualitydata', self.init);
+        if(tech){
+          tech.on('loadedqualitydata', self.init);
+        }
       });
     }
   }
