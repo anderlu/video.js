@@ -1,8 +1,3 @@
-/**
- * User: anderlu
- * Date: 2017/10/26
- * Time: 19:49
- */
 import videojs from '../../video.js';
 import '../components/skin/big-play-button.js';
 import '../components/skin/loading-spinner.js';

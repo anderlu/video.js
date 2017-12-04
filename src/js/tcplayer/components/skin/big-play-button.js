@@ -1,8 +1,3 @@
-/**
- * User: anderlu
- * Date: 2017/10/26
- * Time: 19:48
- */
 import videojs from '../../../video.js';
 
 var play_button_svg = '<svg height="100%" width="100%" viewBox="0 14 96 68">'

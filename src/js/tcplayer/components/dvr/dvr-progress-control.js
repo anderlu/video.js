@@ -1,8 +1,3 @@
-/**
- * User: anderlu
- * Date: 2017/10/12
- * Time: 9:44
- */
 import videojs from '../../../video.js';
 import throttle from 'lodash/throttle';
 /**

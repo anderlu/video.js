@@ -1,11 +1,7 @@
-/**
- * User: Anderlu
- * Date: 2017/9/12
- * Time: 下午11:20
- */
 import videojs from '../video.js';
 //引入自定义模块
 import './components/async-loader.js';
+import './components/logo-image.js';
 import './plugins/skin.js';
 import './plugins/vid.js';
 import './plugins/dvr.js';

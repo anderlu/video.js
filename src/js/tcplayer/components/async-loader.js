@@ -1,5 +1,5 @@
 /**
- * @file loader.js
+ * @file async-loader.js
  */
 import Component from '../../component.js';
 import mergeOptions from '../../utils/merge-options.js';
@@ -172,7 +172,7 @@ class MediaAsyncLoader extends Component {
       };
       player.poster(result.playerInfo.coverInfo.coverUrl);
       let data;
-      if(0 && result.playerInfo.videoInfo.masterPlaylist){
+      if(result.playerInfo.videoInfo.masterPlaylist){
         // user master playlist 优先使用master playlist
         player.src(this.getMasterSouces(result.playerInfo));
       }else{
@@ -234,6 +234,7 @@ class MediaAsyncLoader extends Component {
       // console.log(configItem, index);
       if(transcodeList.length > 0){
         // console.log(transcodeList.length, multiResolution);
+        // 根据清晰度配置，过滤出符合配置的视频sources
         transcodeList = transcodeList.filter(function (source) {
           if(configItem['definitionList'].indexOf(source.definition)>-1){
             if(!sources[configItem.id]){

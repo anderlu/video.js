@@ -194,6 +194,16 @@ class MultiResolution extends Plugin{
       }
     };
   }
+
+  /**
+   * 根据播放格式优先级配置，对原始sources进行排序
+   * @param origin
+   * @returns {Array}
+   */
+  sortSourceOrder(origin){
+    let source=[];
+    return source;
+  }
 }
 
 videojs.registerPlugin('MultiResolution', MultiResolution);

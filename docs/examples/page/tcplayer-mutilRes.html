@@ -34,8 +34,6 @@
 <!--<script src="//imgcache.qq.com/open/qcloud/video/share/js/vconsole.min.js"></script>-->
 <!--x5-video-player-type="h5" x5-video-player-fullscreen="true"-->
 <script>
-//  (function () {
-
 var beforeSetup = function(videoEl, options) {
 //  console.log('beforesetup', videoEl, options);
 //  TcPlayer.getComponent('Player').prototype.options_.children.splice(0,1);//改变初始化组件
@@ -71,13 +69,6 @@ TcPlayer.hook('beforesetup', beforeSetup);
 
     var player = TcPlayer('player1',{
       poster:'//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg',
-//      sources: [{
-//        src: '//bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-//        type: 'application/x-mpegURL',
-//      }, {
-//        src: '//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4',
-//        type: 'video/mp4',
-//      }],
       multiResolution: {
         sources:{
           'sd':[
@@ -126,12 +117,7 @@ TcPlayer.hook('beforesetup', beforeSetup);
         }
       },
 //      techOrder: ['flash','html5'],
-      //config children play failed
-//      children: [o
-//        'bigPlayButton',
-//        'controlBar'
-//      ],
-      'playbackRates': [0.5, 1, 1.5, 2],
+      playbackRates: [0.5, 1, 1.5, 2],
       controlBar: {
         volumePanel: true,
         fullscreenToggle: true,
@@ -152,14 +138,6 @@ TcPlayer.hook('beforesetup', beforeSetup);
       console.log('player on ready');
     });
 
-    setTimeout(function(){
-//      player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
-//      player.src('//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4');
-//      player.poster('//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg');
-//        player.dispose();
-//        player = TcPlayer('player1');
-    },1);
-//  })();
 </script>
 </body>
 </html>
