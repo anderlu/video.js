@@ -115,8 +115,12 @@
     height: 1.5em;
   }
   .vjs-play-progress{
-    background-color: #00a4ff;
+    background-color: rgba(0, 164, 255, 1);
   }
+  .vjs-load-progress{
+    background-color: rgba(0, 161, 214, 1);
+  }
+
   .vjs-custom-control-spacer{
     display: block;
     flex-grow: 1;

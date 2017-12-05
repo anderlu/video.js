@@ -15,37 +15,57 @@ class LogoImage extends ClickableComponent {
   constructor(player, options){
     super(player, options);
     player.on('logochange', videojs.bind(this, this.update));
+    if(options.img){
+      this.update({data:options});
+    }
   }
   createEl (){
     const el = videojs.dom.createEl('div', {
-      className: 'tcp-logo',
+      className: 'tcp-logo vjs-hidden',
     });
-    this.linkEl_ = videojs.dom.createEl('a',{
-      className: 'tcp-logo-link'
+    let linkEl_ = videojs.dom.createEl('a',{
+      className: 'tcp-logo-link',
+      target: '_blank',
     });
-    this.imgEl_ = videojs.dom.createEl('img',{
+    let imgEl_ = videojs.dom.createEl('img',{
       className: 'tcp-logo-img'
     });
-    this.linkEl_.appendChild(this.imgEl_);
-    el.appendChild(this.linkEl_);
+    this.linkEl_ = linkEl_;
+    this.imgEl_ = imgEl_;
+
+    linkEl_.appendChild(imgEl_);
+    el.appendChild(linkEl_);
 
     return el;
   }
+
+  /**
+   *
+   * @param event
+   * data:{
+   *  img:{url:'', position:['left-top'|'left-bottom'|'right-top'|'right-bottom']}
+   *  link:'' // url
+   * }
+   */
   update(event){
-    let imgUrl = event.data.img,
+    let img = event.data.img,
         linkUrl = event.data.link;
-    this.setSrc(imgUrl);
+    this.setImg(img);
     this.setHref(linkUrl);
+    this.options_ = videojs.mergeOptions(this.options_, event.data);
+    this.show();
   }
-  setSrc(url) {
+  setImg(data) {
     if(this.imgEl_){
-      this.imgEl_.src = url;
+      this.imgEl_.src = data.url;
+      videojs.dom.addClass(this.el_, data.position || 'left-top');
     }
   }
   setHref(url){
-    if(this.linkEl_){
+    if(this.linkEl_ && url){
       this.linkEl_.href = url;
     }
   }
 }
+
 videojs.registerComponent('LogoImage', LogoImage);

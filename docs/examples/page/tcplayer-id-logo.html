@@ -7,36 +7,38 @@
   <title>TcPlayer Demo</title>
   <link href="../../../dist/TcPlayer.css" rel="stylesheet">
   <!--<script src="../../../dist/ie8/videojs-ie8.js"></script>-->
-  <script src="//cdn.bootcss.com/hls.js/0.8.4/hls.js"></script>
+  <script src="//cdn.bootcss.com/hls.js/0.8.7/hls.js"></script>
   <script src="../../../dist/TcPlayer.js"></script>
-
   <!--<script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>-->
   <style>
+    html,body{
+      margin: 0;
+      padding: 0;
+    }
     .video-js{
       margin:0 auto;
+    }
+    .tcp-skin .tcp-logo{
+      margin: 10px 0 0 15px;
+    }
+    .tcp-skin .tcp-logo-img{
+      width: 30px;
+      height: 23px;
     }
   </style>
 </head>
 <body>
 
-<video id="player1" class="video-js vjs-default-skin" controls preload="auto" width="480" height="270" playsinline webkit-playinline muted>
+<video id="player1" preload="auto" width="480" height="270" playsinline webkit-playinline muted>
 </video>
 
 <script>
-//  (function () {
-
-var beforeSetup = function(videoEl, options) {
-//  console.log('beforesetup', videoEl, options);
-//  TcPlayer.getComponent('Player').prototype.options_.children.splice(0,1);//改变初始化组件
-  return options;
-};
-
-// add the hook
-TcPlayer.hook('beforesetup', beforeSetup);
-TcPlayer.getComponent('player').prototype.options_.children.push('LogoImage');
+//    document.querySelector('#player1').classList.add('video-js');
     var player = TcPlayer('player1',{
       fileID: '14651978969267306533',
       appID: '1251763412',
+      controls: true,
+//      nativeControlsForTouch: true,
 //      autoplay: true,
       playbackRates: [0.5, 1, 1.5, 2],
       controlBar:{
@@ -51,9 +53,15 @@ TcPlayer.getComponent('player').prototype.options_.children.push('LogoImage');
         MultiResolution:{
           defaultRes:'hd'
         }
-      }
+      }/*,
+      logoImage:{
+        img:{
+          url: 'http://1251132611.vod2.myqcloud.com/8cff3a96vodgzp1251132611/0/player/4564972818595134884.png',
+          position: 'left-top'
+        },
+        link: 'http://www.qq.com'
+      }*/
     });
-//    player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
     player.ready(function() {
       console.log('player cb ready');
     });
@@ -62,14 +70,6 @@ TcPlayer.getComponent('player').prototype.options_.children.push('LogoImage');
       console.log('player on ready');
     });
 
-    setTimeout(function(){
-//      player.src('//1251412368.vod2.myqcloud.com/vodtransgzp1251412368/9031868223043078230/f0.f240.m3u8');
-//      player.src('//1251132611.vod2.myqcloud.com/4126dd3evodtransgzp1251132611/8a592f8b9031868222950257296/f0.f40.mp4');
-//      player.poster('//vodplayerinfo-10005041.file.myqcloud.com/3035579109/vod_paster_pause/paster_pause1469013308.jpg');
-//        player.dispose();
-//        player = TcPlayer('player1');
-    },2000);
-//  })();
 </script>
 </body>
 </html>

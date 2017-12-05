@@ -8,7 +8,7 @@ import * as Fn from '../../utils/fn.js';
 import { getFileExtension, isCrossOrigin } from '../../utils/url.js';
 import * as Constant from '../constant.js';
 import jsonp from '../utils/jsonp.js';
-
+import md5 from 'blueimp-md5';
 /**
  * 可以检测当前播放环境，分析传入的视频格式，
  * 可以异步加载需要的播放组件例如 hls.js、flv.js 等，
@@ -179,6 +179,14 @@ class MediaAsyncLoader extends Component {
         // use multi resolution sources
         player.MultiResolution().update(this.getMultiResolutionSouces(result.playerInfo));
       }
+      // 更新logo数据
+      player.trigger({ type: 'logochange', data: {
+        img:{
+          url: 'http://1251132611.vod2.myqcloud.com/8cff3a96vodgzp1251132611/0/player/4564972818595134884.png',
+          position: 'left-top'
+        },
+        link: 'http://www.qq.com'
+      }});
     } else {
       //error or timeout
       log.error(error);
