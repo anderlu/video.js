@@ -9,7 +9,7 @@
   <!--<script src="../../../dist/ie8/videojs-ie8.js"></script>-->
   <script src="//cdn.bootcss.com/hls.js/0.8.7/hls.js"></script>
   <script src="../../../dist/TcPlayer.js"></script>
-  <!--<script src="//unpkg.com/videojs-contrib-hls.js@3.0.3/dist/videojs-contrib-hlsjs.min.js"></script>-->
+
   <style>
     html,body{
       margin: 0;
@@ -33,34 +33,20 @@
 </video>
 
 <script>
-//    document.querySelector('#player1').classList.add('video-js');
     var player = TcPlayer('player1',{
       fileID: '4564972818519602447',
       appID: '1255566655',
-      controls: true,
-//      nativeControlsForTouch: true,
-//      autoplay: true,
       playbackRates: [0.5, 1, 1.5, 2],
       controlBar:{
         volumePanel:{
           inline:false
         }
       },
-      errorDisplay:{
-//        fillAlways:false
-      },
       plugins:{
         MultiResolution:{
           defaultRes:'hd'
         }
-      }/*,
-      logoImage:{
-        img:{
-          url: 'http://1251132611.vod2.myqcloud.com/8cff3a96vodgzp1251132611/0/player/4564972818595134884.png',
-          position: 'left-top'
-        },
-        link: 'http://www.qq.com'
-      }*/
+      }
     });
     player.ready(function() {
       console.log('player cb ready');
@@ -69,7 +55,6 @@
     player.on('ready', function() {
       console.log('player on ready');
     });
-
 </script>
 </body>
 </html>

@@ -10,7 +10,9 @@ import videojs from '../../video.js';
  */
 const Component = videojs.getComponent('Component');
 const ClickableComponent = videojs.getComponent('ClickableComponent');
-
+const positionMap = [
+  'left-top', 'right-top', 'right-bottom', 'left-bottom'
+];
 class LogoImage extends ClickableComponent {
   constructor(player, options){
     super(player, options);
@@ -55,10 +57,16 @@ class LogoImage extends ClickableComponent {
     this.options_ = videojs.mergeOptions(this.options_, event.data);
     this.show();
   }
+
+  /**
+   * 设置logo图片， position允许值 0~3 or e.g.'left-top'
+   * @param data
+   */
   setImg(data) {
     if(this.imgEl_){
       this.imgEl_.src = data.url;
-      videojs.dom.addClass(this.el_, data.position || 'left-top');
+      let position = positionMap[data.position-1] || data.position || 'left-top';
+      videojs.dom.addClass(this.el_, position);
     }
   }
   setHref(url){

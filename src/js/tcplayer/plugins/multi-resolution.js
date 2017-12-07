@@ -3,9 +3,9 @@ import videojs from '../../video.js';
 const Plugin = videojs.getPlugin('plugin');
 
 let defaultOptions = {
-  'labels': {'ld': '低清', 'sd': '标清', 'hd': '高清', 'fhd': '超清'},
-  'showOrder': ['ld', 'sd', 'hd', 'fhd'],
-  'defaultRes': 'sd'
+  'labels': {'FLU': '流畅', 'SD': '标清', 'HD': '高清', 'FHD': '超清'},
+  'showOrder': ['FLU', 'SD', 'HD', 'FHD'],
+  'defaultRes': 'SD'
 };
 
 class MultiResolution extends Plugin{
