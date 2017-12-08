@@ -202,7 +202,7 @@ class MediaAsyncLoader extends Component {
       // };
       player.poster(result.coverInfo.coverUrl);
       let data;
-      if(0 &&result.videoInfo.masterPlayList){
+      if(result.videoInfo.masterPlayList){
         // user master playlist 优先使用master playlist
         player.src(this.getMasterSouces(result.videoInfo));
       }else{
@@ -293,7 +293,7 @@ class MediaAsyncLoader extends Component {
     });
     multiResolution['sources'] = sources;
     //默认播放清晰度，需要接口返回，如果没有则默认取第一个
-    multiResolution['defaultRes'] = result.playerInfo.defaultResolution || Object.keys(sources)[0];
+    multiResolution['defaultRes'] = result.playerInfo.defaultVideoClassification || Object.keys(sources)[0];
     console.log(multiResolution);
     return multiResolution;
   }

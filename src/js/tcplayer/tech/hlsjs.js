@@ -83,7 +83,7 @@ class Html5HlsJS{
     // 为了避免hls解析快于插件初始化，导致插件不能正常触发时间，这里做延迟处理。
     this.tech.setTimeout(function () {
       this.trigger({ type: 'masterplaylistchange', data: payload });
-    },1);
+    }, 1);
     // this.tech.trigger({ type: 'loadedqualitydata', data: payload });
   }
   getLevelLabel(level) {

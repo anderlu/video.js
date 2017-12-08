@@ -36,17 +36,7 @@
     var player = TcPlayer('player1',{
       fileID: '4564972818519602447',
       appID: '1255566655',
-      playbackRates: [0.5, 1, 1.5, 2],
-      controlBar:{
-        volumePanel:{
-          inline:false
-        }
-      },
-      plugins:{
-        MultiResolution:{
-          defaultRes:'hd'
-        }
-      }
+      playbackRates: true
     });
     player.ready(function() {
       console.log('player cb ready');

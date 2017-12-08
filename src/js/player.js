@@ -448,9 +448,9 @@ class Player extends Component {
     Player.players[this.id_] = this;
 
     // Add a major version class to aid css in plugins
-    const majorVersion = version.split('.')[0];
-
-    this.addClass(`vjs-v${majorVersion}`);
+    // const majorVersion = version.split('.')[0];
+    //
+    // this.addClass(`vjs-v${majorVersion}`);
 
     // When the player is first initialized, trigger activity so components
     // like the control bar show themselves if needed

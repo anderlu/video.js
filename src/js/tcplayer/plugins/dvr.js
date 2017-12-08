@@ -24,6 +24,7 @@ class Dvr extends Plugin{
     super(player);
     this.isInit = false;
     var self = this;
+    console.log('new Dvr');
 
     player.ready(function(){
       let tech = player.tech(true);

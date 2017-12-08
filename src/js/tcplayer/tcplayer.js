@@ -30,6 +30,12 @@ function TcPlayer(id, options, ready) {
   let defaultOptions = {
     controls: true,
     language: 'zh-CN',
+    playbackRates: [0.5, 1, 1.25, 1.5, 2],
+    controlBar:{
+      volumePanel:{
+        inline:false
+      }
+    },
     plugins: {
       Skin:'',
       VID: '',
@@ -48,6 +54,7 @@ function TcPlayer(id, options, ready) {
   };
   if (options) {
     // options.plugins = videojs.mergeOptions(plugins, options.plugins);
+    options.playbackRates = options.playbackRates ? defaultOptions.playbackRates : false;
     options = videojs.mergeOptions(defaultOptions, options);
     console.log(options);
   }

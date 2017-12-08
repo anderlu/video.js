@@ -11,19 +11,19 @@ let defaultOptions = {
 class MultiResolution extends Plugin{
   /**
    *
-   * 用于支持传入多种分辨率，依赖 QualitySwitcher
+   * 用于支持传入多种分辨率的视频，依赖 QualitySwitcher
    * {@link QualitySwitcher}
    * multiResolution:
    * {
-   *  sources:{'sd':[{Object}]}
-   *  labels:{'sd':'标清','hd':'高清'},
-   *  showOrder:['ld', 'sd', 'hd', 'fhd'],
-   *  defaultRes: 'sd'
+   *  sources:{'SD':[{Object}]}
+   *  labels:{'SD':'标清','HD':'高清'},
+   *  showOrder:['FLU', 'SD', 'HD', 'FHD'],
+   *  defaultRes: 'SD'
    * }
    */
   constructor(player, options) {
     super(player);
-    // console.log('MultiResolution new', player, options);
+    console.log('new MultiResolution', options);
     this.options = options;
     this.hasInit = false;
     player.on('multiresolutionchange', videojs.bind(this, function (event) {
@@ -37,7 +37,6 @@ class MultiResolution extends Plugin{
         tech.on('masterplaylistchange', videojs.bind(this, this.onMasterPlaylistChange));
       }
     }));
-    //
     this.init(this.player.options_.multiResolution);
   }
 
@@ -65,15 +64,15 @@ class MultiResolution extends Plugin{
       }
       //通过事件初始化切换清晰度组件
       player.ready(videojs.bind(this, function () {
-        let tech = this.player.tech(true);
-        tech.trigger({type: 'loadedqualitydata', data: this.initQualityData(options)});
-        //避免切换的时候 video的poster自动显示
-        if ('Html5' == tech.name_) {
-          delete tech.el_.poster;
-          player.one('loadedmetadata', function () {
+        player.trigger({type: 'loadedqualitydata', data: this.initQualityData(options)});
+        //避免切换的时候 video 的poster自动显示，需要删除h5 tech自带的poster
+        player.one('loadstart', function () {
+          // console.log('loadstart', tech);
+          let tech = this.tech(true);
+          if ('Html5' == tech.name_ && tech.el_.getAttribute('poster')) {
             tech.el_.setAttribute('poster', '');
-          });
-        }
+          }
+        });
       }));
     }
   }
@@ -84,7 +83,7 @@ class MultiResolution extends Plugin{
    * data = {Object} multiResolution
    */
   update(data){
-    console.log(this, data);
+    // console.log(this, data);
     this.init(data);
   }
 
@@ -93,9 +92,9 @@ class MultiResolution extends Plugin{
    * @param event
    */
   onMasterPlaylistChange(event){
-    console.log('onMasterPlaylistChange', event, this.options);
-    let tech = this.player.tech(true);
-    tech.trigger({type: 'loadedqualitydata', data: event.data});
+    console.log('onMasterPlaylistChange', event);
+    // let tech = this.player.tech(true);
+    player.trigger({type: 'loadedqualitydata', data: event.data});
   }
   /**
    * quality switcher 的回调函数，参数为选中的item options
@@ -118,7 +117,7 @@ class MultiResolution extends Plugin{
     // ios 必须loadeddata后才能设置currentTime
     // loadedmetadata trigger faster then loadeddata
     let event = videojs.browser.IS_IOS || videojs.browser.IS_ANDROID ? 'loadeddata' : 'loadedmetadata';
-    console.log('switchResolution');
+    // console.log('switchResolution');
     player.one(event, function () {
       player.controlBar.progressControl.seekBar.playProgressBar.el().style.width = w;
       player.currentTime(currentTime);
@@ -127,6 +126,7 @@ class MultiResolution extends Plugin{
       // player.posterImage && player.posterImage.show();
       // FLash模式下需要手动处理seeked事件
       if(player.techName_ == 'Flash'){
+        // flash 模式下无法直接pause 必须调用play后，延迟调用pause
         player.play();
         if(isPaused){
           setTimeout(function(){
